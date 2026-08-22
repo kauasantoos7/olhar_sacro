@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olhar Sacro - Histórias de Santos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cinzel & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sacred: {
+                            gold: '#D4AF37',
+                            goldLight: '#F7E7A9',
+                            goldDark: '#B8860B',
+                            navy: '#0B1325',
+                            navyLight: '#162238',
+                            navyCard: '#111C33',
+                            cream: '#FAF8F5'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 25px -5px rgba(212, 175, 55, 0.25)',
+                        'gold-sm': '0 0 10px rgba(212, 175, 55, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B1325;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F7E7A9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-sacred-gold selection:text-sacred-navy relative">
+
+    <!-- Ambient background light effect -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-sacred-gold/5 blur-3xl pointer-events-none -z-10 rounded-full"></div>
+
+    <!-- HEADER -->
+    <header class="bg-sacred-navy/95 backdrop-blur-md text-white sticky top-0 z-30 shadow-lg border-b border-sacred-gold/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3.5">
+                <!-- Ícone da Cruz - 3 cliques abrem o painel secreto de senha -->
+                <button onclick="handleSecretClick()" title="Olhar Sacro" 
+                        class="relative group p-2 rounded-xl text-sacred-gold text-2xl sm:text-3xl hover:scale-110 transition-all duration-300 cursor-pointer focus:outline-none select-none">
+                    <span class="absolute inset-0 bg-sacred-gold/10 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <span class="relative z-10 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]">✝</span>
+                </button>
+                <div>
+                    <h1 class="font-cinzel text-xl sm:text-2xl font-black tracking-wider text-sacred-goldLight drop-shadow-sm">
+                        OLHAR SACRO
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-300 tracking-widest font-cinzel">
+                        HISTÓRIAS DOS SANTOS
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span id="saintCountBadge" class="text-xs font-cinzel text-sacred-gold bg-sacred-navyLight/80 px-3.5 py-1.5 rounded-full border border-sacred-gold/30 shadow-sm backdrop-blur-sm">
+                    Carregando...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+
+        <!-- CARROSSEL DE FRASES DOS SANTOS -->
+        <section class="bg-gradient-to-br from-sacred-navy via-sacred-navyLight to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-gold-glow border border-sacred-gold/30 relative overflow-hidden">
+            <!-- Background cross overlay -->
+            <div class="absolute -right-8 -bottom-8 text-sacred-gold/5 text-9xl font-cinzel select-none pointer-events-none">
+                ✝
+            </div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/50 to-transparent"></div>
+
+            <div class="max-w-3xl mx-auto text-center space-y-5 relative z-10">
+                <div class="font-cinzel font-black text-xl sm:text-2xl tracking-widest uppercase text-sacred-goldLight drop-shadow-[0_0_12px_rgba(212,175,55,0.4)]">
+                    OLHAR SACRO
+                </div>
+
+                <!-- Card de Frase Animado -->
+                <div id="quoteCard" class="min-h-[120px] flex flex-col justify-center transition-all duration-500 transform">
+                    <p id="quoteText" class="font-cinzel text-lg sm:text-2xl italic font-medium text-sacred-goldLight leading-relaxed drop-shadow">
+                        “É justo que muito custe o que muito vale.”
+                    </p>
+                    <p id="quoteAuthor" class="text-xs sm:text-sm text-slate-300 font-cinzel mt-4 font-semibold tracking-wide">
+                        — Santa Teresa d'Ávila
+                    </p>
+                </div>
+
+                <!-- Indicadores do Carrossel -->
+                <div id="quoteIndicators" class="flex justify-center items-center gap-2 pt-2">
+                    <!-- Gerado Dinamicamente via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- BARRA DE PESQUISA -->
+        <section class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80">
+            <div class="relative w-full">
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar santo pelo nome..." 
+                       class="w-full pl-12 pr-12 py-4 rounded-2xl bg-slate-50/80 border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-2 focus:ring-sacred-gold/20 text-sm sm:text-base transition-all shadow-inner">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none">🔍</span>
+                <button onclick="clearSearch()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold p-1.5 rounded-full hover:bg-slate-200/50 transition-colors">
+                    ✕
+                </button>
+            </div>
+        </section>
+
+        <!-- GRADE DE SANTOS -->
+        <section id="saintsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Gerado via JavaScript -->
+        </section>
+
+        <!-- ESTADO VAZIO -->
+        <div id="emptyState" class="hidden text-center py-16 bg-white/90 rounded-3xl border border-dashed border-slate-300 space-y-3 shadow-sm">
+            <div class="text-4xl">📖</div>
+            <h3 class="font-cinzel text-lg font-bold text-sacred-navy">Nenhum santo encontrado</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Tente buscar por outro nome de santo.</p>
+            <button onclick="clearSearch()" class="mt-2 px-5 py-2.5 bg-sacred-navy text-sacred-gold text-xs font-cinzel font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+                Limpar Pesquisa
+            </button>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-sacred-navy text-slate-400 border-t border-sacred-gold/20 py-8 text-center text-xs space-y-2 relative mt-12">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/40 to-transparent"></div>
+        <p class="font-cinzel text-sacred-goldLight font-medium tracking-wide">OLHAR SACRO</p>
+        <p class="text-slate-500">Desenvolvido por Kauã Rodrigues de Sousa Santos</p>
+    </footer>
+
+    <!-- MODAL DETALHES DO SANTO -->
+    <div id="saintDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
+            <!-- Modal Header -->
+            <div class="bg-sacred-navy text-white p-6 flex justify-between items-start border-b border-sacred-gold/30 relative">
+                <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/50 to-transparent"></div>
+                <div>
+                    <h2 id="detailTitle" class="font-cinzel text-2xl sm:text-3xl font-bold text-sacred-goldLight tracking-wide">
+                        Nome do Santo
+                    </h2>
+                    <p id="detailFeast" class="text-xs text-slate-300 font-cinzel mt-1 tracking-wider"></p>
+                </div>
+                <button onclick="closeModal('saintDetailModal')" class="text-slate-300 hover:text-white text-2xl font-bold p-1 rounded-lg hover:bg-white/10 transition-colors">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-grow text-slate-700">
+                <!-- Patronage -->
+                <div id="patronageContainer" class="hidden bg-sacred-cream p-4 rounded-2xl border border-sacred-gold/30 shadow-sm">
+                    <span class="text-xs font-cinzel font-bold text-sacred-goldDark uppercase tracking-wider block mb-1">Padroeiro de:</span>
+                    <p id="detailPatronage" class="text-sm font-medium text-sacred-navy"></p>
+                </div>
+
+                <!-- Gallery 3 Photos -->
+                <div class="space-y-3">
+                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Galeria de Imagens</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="sm:col-span-3 aspect-video bg-sacred-navy rounded-2xl overflow-hidden border border-sacred-gold/20 shadow-md">
+                            <img id="galleryMainImg" src="" alt="Imagem Principal" class="w-full h-full object-cover">
+                        </div>
+                        <div id="galleryThumbnails" class="sm:col-span-3 grid grid-cols-3 gap-3">
+                            <!-- Thumbnails JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biografia Completa -->
+                <div class="space-y-2">
+                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">História / Biografia Completa</span>
+                    <p id="detailBio" class="text-sm sm:text-base leading-relaxed whitespace-pre-line text-slate-600 bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-inner"></p>
+                </div>
+
+                <!-- Frases do Santo -->
+                <div id="quotesContainer" class="hidden space-y-2">
+                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Frases e Ensinamentos</span>
+                    <div id="detailQuotes" class="space-y-2.5 text-sm italic font-cinzel text-sacred-navy bg-sacred-cream p-6 rounded-2xl border border-sacred-gold/30 shadow-sm"></div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
+                <button onclick="closeModal('saintDetailModal')" class="px-6 py-2.5 bg-sacred-navy text-sacred-gold font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SENHA SECRETA -->
+    <div id="secretPasswordModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-sacred-navy text-white w-full max-w-sm p-6 sm:p-8 rounded-3xl border border-sacred-gold/40 shadow-gold-glow space-y-5 text-center animate-fade-in relative overflow-hidden">
+            <div class="text-4xl text-sacred-gold drop-shadow">🔑</div>
+            <div>
+                <h3 class="font-cinzel text-lg font-bold text-sacred-goldLight">Acesso Administrativo</h3>
+                <p class="text-xs text-slate-300 mt-1">Digite a senha de publicação para gerenciar o catálogo.</p>
+            </div>
+
+            <form onsubmit="handleSecretPassword(event)" class="space-y-4">
+                <input type="password" id="secretPasswordInput" placeholder="Sua senha secreta" required
+                       class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-sacred-gold/30 text-white text-center focus:outline-none focus:border-sacred-gold text-sm shadow-inner">
+                
+                <p id="passwordError" class="text-xs text-rose-400 hidden font-bold">
+                    Senha incorreta. Tente novamente.
+                </p>
+
+                <div class="flex gap-2.5">
+                    <button type="button" onclick="closeModal('secretPasswordModal')" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 text-xs font-cinzel font-bold rounded-xl hover:bg-slate-700 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-sacred-gold text-sacred-navy text-xs font-cinzel font-bold rounded-xl hover:bg-sacred-goldLight transition-colors shadow-md">
+                        Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DASHBOARD ADMINISTRATIVO -->
+    <div id="adminDashboardModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
+            <div class="bg-sacred-navy text-white p-6 flex justify-between items-center border-b border-sacred-gold/30">
+                <div>
+                    <h3 class="font-cinzel text-xl font-bold text-sacred-goldLight">Painel de Administração</h3>
+                    <p class="text-xs text-slate-300">Gerencie e publique as histórias dos santos no site.</p>
+                </div>
+                <button onclick="closeModal('adminDashboardModal')" class="text-slate-300 hover:text-white text-2xl font-bold">
+                    ✕
+                </button>
+            </div>
+
+            <div class="p-6 flex justify-between items-center bg-slate-50 border-b border-slate-200">
+                <span class="text-xs font-cinzel font-bold text-sacred-navy">Catálogo Atual</span>
+                <button onclick="openAdminFormForCreate()" class="px-4 py-2.5 bg-sacred-gold text-sacred-navy font-cinzel text-xs font-bold rounded-xl hover:bg-sacred-goldLight transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>➕</span> Publicar Nova História
+                </button>
+            </div>
+
+            <div id="adminSaintsList" class="p-6 overflow-y-auto flex-grow space-y-3">
+                <!-- Lista para Edição e Exclusão JS -->
+            </div>
+
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
+                <button onclick="closeModal('adminDashboardModal')" class="px-5 py-2.5 bg-sacred-navy text-sacred-gold font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+                    Sair do Painel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULÁRIO DE POSTAGEM / EDIÇÃO -->
+    <div id="adminPostModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
+            <div class="bg-sacred-navy text-white p-6 flex justify-between items-center border-b border-sacred-gold/30">
+                <h3 id="adminFormTitle" class="font-cinzel text-xl font-bold text-sacred-goldLight">
+                    Publicar História de Santo
+                </h3>
+                <button onclick="closeAdminFormAndReturn()" class="text-slate-300 hover:text-white text-2xl font-bold">
+                    ✕
+                </button>
+            </div>
+
+            <form onsubmit="handlePostSaint(event)" class="p-6 overflow-y-auto flex-grow space-y-5 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">Nome do Santo *</label>
+                    <input type="text" id="postName" required placeholder="Ex: São Francisco de Assis"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">Dia Festivo (Opcional)</label>
+                        <input type="text" id="postFeast" placeholder="Ex: 04 de Outubro"
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold">
+                    </div>
+                    <div>
+                        <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">Padroeiro de (Opcional)</label>
+                        <input type="text" id="postPatronage" placeholder="Ex: Animais e Ecologia"
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">Frases do Santo (Uma frase por linha - Opcional)</label>
+                    <textarea id="postQuotes" rows="2" placeholder="Comece fazendo o que é necessário...&#10;Senhor, fazei-me instrumento de vossa paz."
+                              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">História / Biografia Completa *</label>
+                    <textarea id="postBio" required rows="5" placeholder="Escreva aqui a trajetória e o testemunho de fé do santo..."
+                              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold"></textarea>
+                </div>
+
+                <!-- SELEÇÃO E AJUSTE DE FOTOS DO DISPOSITIVO -->
+                <div class="space-y-4 border-t border-slate-200 pt-5">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <label class="block font-cinzel font-bold text-sacred-navy text-sm">3 Fotos do Santo (Selecione do Dispositivo)</label>
+                            <p class="text-[11px] text-slate-500">Você pode ajustar o enquadramento, zoom e foco de cada foto abaixo.</p>
+                        </div>
+                        <span id="photosRequirementNote" class="text-[10px] text-slate-400 font-bold"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5">
+                        <!-- Foto 1 (Capa) -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 1 (Capa Principal)</label>
+                                <span class="text-[10px] text-sacred-goldDark bg-sacred-gold/10 px-2.5 py-0.5 rounded-full font-bold">Capa do Card</span>
+                            </div>
+                            <input type="file" id="postPhotoFile1" accept="image/*" onchange="handlePhotoSelect(1, this)"
+                                   class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sacred-navy file:text-sacred-gold hover:file:bg-slate-800 transition-colors">
+                            
+                            <!-- Container Prévia Canvas -->
+                            <div id="previewContainer1" class="hidden space-y-3 pt-1">
+                                <div class="aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-slate-300 shadow-md relative">
+                                    <canvas id="canvasPreview1" class="w-full h-full object-contain"></canvas>
+                                </div>
+
+                                <!-- Painel de Ajustes -->
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
+                                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 1)</span>
+                                        <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                                            <button type="button" onclick="setSlotFitMode(1, 'cover')" id="btnFitCover1" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
+                                            <button type="button" onclick="setSlotFitMode(1, 'contain')" id="btnFitContain1" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Zoom</span>
+                                                <span id="zoomVal1" class="font-bold">1.0x</span>
+                                            </div>
+                                            <input type="range" id="zoomSlider1" min="1.0" max="2.2" step="0.05" value="1.0" oninput="updateSlotAdjustment(1)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Vertical</span>
+                                                <span id="posYVal1" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posYSlider1" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(1)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Horizontal</span>
+                                                <span id="posXVal1" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posXSlider1" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(1)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foto 2 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 2 (Galeria)</label>
+                            <input type="file" id="postPhotoFile2" accept="image/*" onchange="handlePhotoSelect(2, this)"
+                                   class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sacred-navy file:text-sacred-gold hover:file:bg-slate-800 transition-colors">
+                            
+                            <div id="previewContainer2" class="hidden space-y-3 pt-1">
+                                <div class="aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-slate-300 shadow-md relative">
+                                    <canvas id="canvasPreview2" class="w-full h-full object-contain"></canvas>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
+                                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 2)</span>
+                                        <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                                            <button type="button" onclick="setSlotFitMode(2, 'cover')" id="btnFitCover2" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
+                                            <button type="button" onclick="setSlotFitMode(2, 'contain')" id="btnFitContain2" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Zoom</span>
+                                                <span id="zoomVal2" class="font-bold">1.0x</span>
+                                            </div>
+                                            <input type="range" id="zoomSlider2" min="1.0" max="2.2" step="0.05" value="1.0" oninput="updateSlotAdjustment(2)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Vertical</span>
+                                                <span id="posYVal2" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posYSlider2" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(2)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Horizontal</span>
+                                                <span id="posXVal2" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posXSlider2" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(2)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foto 3 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 3 (Galeria)</label>
+                            <input type="file" id="postPhotoFile3" accept="image/*" onchange="handlePhotoSelect(3, this)"
+                                   class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sacred-navy file:text-sacred-gold hover:file:bg-slate-800 transition-colors">
+                            
+                            <div id="previewContainer3" class="hidden space-y-3 pt-1">
+                                <div class="aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-slate-300 shadow-md relative">
+                                    <canvas id="canvasPreview3" class="w-full h-full object-contain"></canvas>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
+                                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 3)</span>
+                                        <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                                            <button type="button" onclick="setSlotFitMode(3, 'cover')" id="btnFitCover3" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
+                                            <button type="button" onclick="setSlotFitMode(3, 'contain')" id="btnFitContain3" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Zoom</span>
+                                                <span id="zoomVal3" class="font-bold">1.0x</span>
+                                            </div>
+                                            <input type="range" id="zoomSlider3" min="1.0" max="2.2" step="0.05" value="1.0" oninput="updateSlotAdjustment(3)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Vertical</span>
+                                                <span id="posYVal3" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posYSlider3" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(3)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                                                <span>Posição Horizontal</span>
+                                                <span id="posXVal3" class="font-bold">Centro</span>
+                                            </div>
+                                            <input type="range" id="posXSlider3" min="0" max="100" step="1" value="50" oninput="updateSlotAdjustment(3)" class="w-full accent-sacred-gold h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-5 border-t border-slate-200 flex justify-end gap-2.5">
+                    <button type="button" onclick="closeAdminFormAndReturn()" class="px-5 py-2.5 bg-slate-100 text-slate-600 font-cinzel text-xs font-bold rounded-xl hover:bg-slate-200 transition-colors">
+                        Voltar
+                    </button>
+                    <button type="submit" id="submitPostBtn" class="px-6 py-2.5 bg-sacred-gold text-sacred-navy font-cinzel text-xs font-bold rounded-xl hover:bg-sacred-goldLight transition-colors shadow-md">
+                        Salvar e Publicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-sm p-6 sm:p-8 rounded-3xl shadow-2xl border border-rose-200 text-center space-y-4 animate-fade-in">
+            <div class="text-4xl text-rose-500">⚠️</div>
+            <h3 class="font-cinzel text-lg font-bold text-slate-800">Confirmar Exclusão</h3>
+            <p id="deleteConfirmText" class="text-xs text-slate-500 leading-relaxed"></p>
+
+            <div class="flex gap-2.5 pt-2">
+                <button onclick="closeModal('deleteConfirmModal')" class="w-1/2 py-2.5 bg-slate-100 text-slate-600 text-xs font-cinzel font-bold rounded-xl hover:bg-slate-200 transition-colors">
+                    Cancelar
+                </button>
+                <button onclick="confirmDeleteSaintAction()" class="w-1/2 py-2.5 bg-rose-600 text-white text-xs font-cinzel font-bold rounded-xl hover:bg-rose-700 shadow-md transition-colors">
+                    Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL DA APLICAÇÃO -->
+    <script>
+        const INITIAL_SAINTS = [
+            {
+                id: 'sao-francisco-de-assis',
+                name: 'São Francisco de Assis',
+                feastDay: '04 de Outubro',
+                patronage: 'Animais, Ecologia e Itália',
+                bio: `São Francisco de Assis (1181-1226) nasceu em Assis, na Itália. Filho de um rico comerciante de tecidos, renunciou a toda a sua herança material perante o bispo local para abraçar a Senhora Pobreza e seguir radicalmente os passos de Nosso Senhor Jesus Cristo.\n\nRecebeu os estigmas da Paixão em seu próprio corpo e compôs o famoso 'Cântico das Criaturas'. É um dos santos mais venerados de toda a história cristã por sua simplicidade, amor aos pobres e proteção à natureza.`,
+                quotes: [
+                    'Comece fazendo o que é necessário, depois o que é possível, e de repente você estará fazendo o impossível.',
+                    'Senhor, fazei-me instrumento de vossa paz.',
+                    'Ninguém é suficientemente perfeito que não possa aprender com os outros.'
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80'
+                ]
+            },
+            {
+                id: 'santa-teresinha',
+                name: 'Santa Teresinha do Menino Jesus',
+                feastDay: '01 de Outubro',
+                patronage: 'Missões e Floristas',
+                bio: `Santa Teresa de Lisieux (1873-1897), conhecida como a 'Florzinha de Jesus', entrou no Carmelo de Lisieux com apenas 15 anos de idade.\n\nApesar de sua vida breve e enclausurada, tornou-se Padroeira das Missões por suas ardentes orações e oferecimentos. Sua autobiografia 'História de uma Alma' inspira milhões com a teologia da 'Pequena Via': fazer as pequenas coisas diárias com um amor extraordinário.`,
+                quotes: [
+                    'Quero passar o meu céu fazendo o bem sobre a terra.',
+                    'Compreendi que o amor integrava todas as vocações, que o amor era tudo.',
+                    'Para mim, a oração é um impulso do coração, um simples olhar lançado para o céu.'
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80'
+                ]
+            },
+            {
+                id: 'sao-bento',
+                name: 'São Bento de Núrsia',
+                feastDay: '11 de Julho',
+                patronage: 'Europa e Monasticismo Ocidental',
+                bio: `São Bento (480-547) nasceu em Núrsia, Itália. Retirou-se para uma gruta em Subiaco para viver em oração e penitência antes de fundar o famoso Mosteiro de Monte Cassino.\n\nSua Regra Monástica baseada no equilíbrio entre a Oração e o Trabalho (Ora et Labora) moldou a civilização ocidental na Idade Média. A Medalha de São Bento é um sacramental amplamente venerado contra os males do espírito.`,
+                quotes: [
+                    'Ora et Labora (Ora e Trabalha).',
+                    'Prefira nada ao amor de Cristo.',
+                    'A oração deve ser curta e pura, a não ser que se prolongue por um afeto de inspiração divina.'
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80'
+                ]
+            },
+            {
+                id: 'santa-teresa-davila',
+                name: "Santa Teresa d'Ávila",
+                feastDay: '15 de Outubro',
+                patronage: 'Espanha e Escritores',
+                bio: `Santa Teresa de Jesus (1515-1582) foi uma mística carmelita, escritora e reformadora da Ordem dos Carmelitas Descalços. Foi a primeira mulher proclamada Doutora da Igreja pelo Papa Paulo VI.\n\nAutora de obras fundamentais da vida espiritual como 'O Castelo Interior' e 'Caminho de Perfeição', ensinou o caminho da oração mental e da amizade íntima com Deus.`,
+                quotes: [
+                    "É justo que muito custe o que muito vale.",
+                    "Nada te perturbe, nada te espante, tudo passa, Deus não muda.",
+                    "A oração não é outra coisa senão um trato de amizade com Deus."
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80'
+                ]
+            }
+        ];
+
+        let saintsData = [];
+        let currentSearchQuery = '';
+        let editingSaintId = null;
+        let saintToDeleteId = null;
+
+        // Estado das 3 fotos no formulário
+        const photoSlotsState = {
+            1: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null },
+            2: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null },
+            3: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null }
+        };
+
+        // Controle do Carrossel de Frases
+        let activeQuotesList = [];
+        let currentQuoteIndex = 0;
+        let quoteInterval = null;
+
+        // Contador para o botão secreto
+        let secretClickCount = 0;
+        let secretClickTimer = null;
+
+        function initData() {
+            const stored = localStorage.getItem('olhar_sacro_saints');
+            if (stored) {
+                try {
+                    saintsData = JSON.parse(stored);
+                } catch(e) {
+                    saintsData = INITIAL_SAINTS;
+                }
+            } else {
+                saintsData = INITIAL_SAINTS;
+                localStorage.setItem('olhar_sacro_saints', JSON.stringify(INITIAL_SAINTS));
+            }
+        }
+
+        function refreshQuotesList() {
+            activeQuotesList = [];
+            if (Array.isArray(saintsData)) {
+                saintsData.forEach(saint => {
+                    if (saint.quotes && Array.isArray(saint.quotes)) {
+                        saint.quotes.forEach(q => {
+                            if (q && q.trim()) {
+                                const clean = q.trim().replace(/^["“'«]|["”'»]$/g, '');
+                                if (clean) {
+                                    activeQuotesList.push({
+                                        quote: clean,
+                                        author: saint.name
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            for (let i = activeQuotesList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeQuotesList[i], activeQuotesList[j]] = [activeQuotesList[j], activeQuotesList[i]];
+            }
+
+            if (activeQuotesList.length === 0) {
+                activeQuotesList = [
+                    { quote: "É justo que muito custe o que muito vale.", author: "Santa Teresa d'Ávila" }
+                ];
+            }
+        }
+
+        function initQuoteCarousel() {
+            refreshQuotesList();
+            renderQuoteIndicators();
+            currentQuoteIndex = 0;
+            showQuote(currentQuoteIndex);
+
+            if (quoteInterval) clearInterval(quoteInterval);
+            quoteInterval = setInterval(() => {
+                nextQuote();
+            }, 5500);
+        }
+
+        function renderQuoteIndicators() {
+            const container = document.getElementById('quoteIndicators');
+            if (!container) return;
+
+            container.innerHTML = activeQuotesList.map((_, idx) => `
+                <button onclick="goToQuote(${idx})" 
+                        aria-label="Frase ${idx + 1}"
+                        class="h-2 rounded-full transition-all duration-300 ${idx === currentQuoteIndex ? 'w-6 bg-sacred-gold shadow-gold-sm' : 'w-2 bg-sacred-gold/30 hover:bg-sacred-gold/60'}">
+                </button>
+            `).join('');
+        }
+
+        function goToQuote(idx) {
+            if (activeQuotesList.length === 0) return;
+            currentQuoteIndex = idx % activeQuotesList.length;
+            showQuote(currentQuoteIndex);
+
+            if (quoteInterval) {
+                clearInterval(quoteInterval);
+                quoteInterval = setInterval(() => {
+                    nextQuote();
+                }, 5500);
+            }
+        }
+
+        function nextQuote() {
+            if (activeQuotesList.length === 0) return;
+            currentQuoteIndex = (currentQuoteIndex + 1) % activeQuotesList.length;
+            showQuote(currentQuoteIndex);
+        }
+
+        function showQuote(idx) {
+            const card = document.getElementById('quoteCard');
+            const textEl = document.getElementById('quoteText');
+            const authorEl = document.getElementById('quoteAuthor');
+            const indicators = document.getElementById('quoteIndicators');
+
+            if (!card || !textEl || !authorEl || activeQuotesList.length === 0) return;
+
+            card.classList.add('opacity-0', 'translate-y-2');
+
+            setTimeout(() => {
+                const item = activeQuotesList[idx % activeQuotesList.length];
+                if (item) {
+                    textEl.innerText = `“${item.quote}”`;
+                    authorEl.innerText = `— ${item.author}`;
+                }
+
+                if (indicators) {
+                    const dots = indicators.querySelectorAll('button');
+                    dots.forEach((dot, dotIdx) => {
+                        if (dotIdx === (idx % activeQuotesList.length)) {
+                            dot.className = 'h-2 rounded-full transition-all duration-300 w-6 bg-sacred-gold shadow-gold-sm';
+                        } else {
+                            dot.className = 'h-2 rounded-full transition-all duration-300 w-2 bg-sacred-gold/30 hover:bg-sacred-gold/60';
+                        }
+                    });
+                }
+
+                card.classList.remove('opacity-0', 'translate-y-2');
+            }, 300);
+        }
+
+        function renderSaintsGrid() {
+            const grid = document.getElementById('saintsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const countBadge = document.getElementById('saintCountBadge');
+
+            if (!grid) return;
+
+            const filtered = saintsData.filter(saint => {
+                if (!currentSearchQuery) return true;
+                return saint.name.toLowerCase().includes(currentSearchQuery.toLowerCase());
+            });
+
+            if (countBadge) {
+                countBadge.innerText = `${filtered.length} ${filtered.length === 1 ? 'Santo' : 'Santos'}`;
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(saint => {
+                const coverPhoto = (saint.photos && saint.photos[0]) ? saint.photos[0] : '';
+                const feastText = saint.feastDay ? `• ${saint.feastDay}` : '';
+
+                return `
+                    <div onclick="openSaintDetailModal('${saint.id}')" 
+                         class="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl hover:border-sacred-gold/40 transition-all duration-300 cursor-pointer group flex flex-col justify-between hover:-translate-y-1.5 relative">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-sacred-gold/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div>
+                            <div class="relative aspect-[4/3] bg-sacred-navy overflow-hidden">
+                                <img src="${coverPhoto}" alt="${saint.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-sacred-navy via-transparent to-transparent opacity-80"></div>
+                                <span class="absolute bottom-3 left-3 text-xs font-cinzel text-sacred-goldLight bg-sacred-navy/85 px-3 py-1 rounded-full border border-sacred-gold/30 backdrop-blur-md shadow-sm">
+                                    † Ver História
+                                </span>
+                            </div>
+                            <div class="p-5 sm:p-6">
+                                <h3 class="font-cinzel text-lg sm:text-xl font-bold text-sacred-navy group-hover:text-sacred-goldDark transition-colors mb-1 line-clamp-1">
+                                    ${saint.name}
+                                </h3>
+                                <p class="text-xs font-semibold text-sacred-goldDark font-cinzel mb-2.5">
+                                    ${saint.patronage || 'Santo da Igreja'} ${feastText}
+                                </p>
+                                <p class="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed">
+                                    ${saint.bio || ''}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-5 sm:px-6 pb-5 pt-3 text-xs font-cinzel font-bold text-sacred-navy flex items-center justify-between border-t border-slate-100">
+                            <span>Ler biografia completa</span>
+                            <span class="text-sacred-gold text-base group-hover:translate-x-1.5 transition-transform">→</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleSearch() {
+            const input = document.getElementById('searchInput');
+            currentSearchQuery = input ? input.value.trim() : '';
+            renderSaintsGrid();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = '';
+            currentSearchQuery = '';
+            renderSaintsGrid();
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function handleSecretClick() {
+            secretClickCount++;
+            if (secretClickTimer) clearTimeout(secretClickTimer);
+            if (secretClickCount >= 3) {
+                secretClickCount = 0;
+                document.getElementById('secretPasswordInput').value = '';
+                document.getElementById('passwordError').classList.add('hidden');
+                openModal('secretPasswordModal');
+            } else {
+                secretClickTimer = setTimeout(() => {
+                    secretClickCount = 0;
+                }, 1000);
+            }
+        }
+
+        function handleSecretPassword(e) {
+            e.preventDefault();
+            const passwordInput = document.getElementById('secretPasswordInput').value;
+            const errorMsg = document.getElementById('passwordError');
+
+            if (passwordInput === 'ka19sa06') {
+                closeModal('secretPasswordModal');
+                renderAdminSaintsList();
+                openModal('adminDashboardModal');
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function openSaintDetailModal(id) {
+            const saint = saintsData.find(s => s.id === id);
+            if (!saint) return;
+
+            document.getElementById('detailTitle').innerText = saint.name || '';
+            document.getElementById('detailFeast').innerText = saint.feastDay ? `Dia Festivo: ${saint.feastDay}` : '';
+            document.getElementById('detailBio').innerText = saint.bio || '';
+
+            const patronageContainer = document.getElementById('patronageContainer');
+            const detailPatronage = document.getElementById('detailPatronage');
+            if (saint.patronage && saint.patronage.trim()) {
+                detailPatronage.innerText = saint.patronage;
+                patronageContainer.classList.remove('hidden');
+            } else {
+                patronageContainer.classList.add('hidden');
+            }
+
+            const quotesContainer = document.getElementById('quotesContainer');
+            const detailQuotes = document.getElementById('detailQuotes');
+            if (saint.quotes && saint.quotes.length > 0) {
+                detailQuotes.innerHTML = saint.quotes.map(q => `<p class="border-l-2 border-sacred-gold pl-3 py-0.5">"${q}"</p>`).join('');
+                quotesContainer.classList.remove('hidden');
+            } else {
+                quotesContainer.classList.add('hidden');
+            }
+
+            const mainImg = document.getElementById('galleryMainImg');
+            const thumbnailsContainer = document.getElementById('galleryThumbnails');
+            const photos = (saint.photos && saint.photos.length > 0) ? saint.photos : ['', '', ''];
+
+            if (mainImg) mainImg.src = photos[0] || '';
+
+            if (thumbnailsContainer) {
+                thumbnailsContainer.innerHTML = photos.map((p, index) => `
+                    <div onclick="changeGalleryMainImage('${p}')" class="aspect-video rounded-xl overflow-hidden bg-sacred-navy border border-slate-200 cursor-pointer hover:border-sacred-gold transition-colors shadow-sm">
+                        <img src="${p}" alt="Foto ${index + 1}" class="w-full h-full object-cover hover:opacity-90 transition-opacity">
+                    </div>
+                `).join('');
+            }
+
+            openModal('saintDetailModal');
+        }
+
+        function changeGalleryMainImage(url) {
+            const mainImg = document.getElementById('galleryMainImg');
+            if (mainImg && url) mainImg.src = url;
+        }
+
+        function renderAdminSaintsList() {
+            const listEl = document.getElementById('adminSaintsList');
+            if (!listEl) return;
+
+            if (saintsData.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs">
+                        Nenhuma história cadastrada no catálogo.
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = saintsData.map(saint => {
+                const thumb = (saint.photos && saint.photos[0]) ? saint.photos[0] : '';
+                const feast = saint.feastDay ? `• ${saint.feastDay}` : '';
+
+                return `
+                    <div class="flex items-center justify-between gap-3 p-3.5 sm:p-4 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 transition-colors">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-12 h-12 rounded-xl overflow-hidden bg-sacred-navy shrink-0 border border-slate-200 shadow-sm">
+                                <img src="${thumb}" alt="${saint.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="font-cinzel text-sm sm:text-base font-bold text-sacred-navy truncate">${saint.name}</h4>
+                                <p class="text-xs text-slate-500 truncate">${saint.patronage || 'Sem patronato'} ${feast}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="openAdminFormForEdit('${saint.id}')" class="px-3 py-1.5 bg-sacred-navy/10 hover:bg-sacred-navy text-sacred-navy hover:text-white text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center gap-1">
+                                <span>✏️</span> <span class="hidden sm:inline">Editar</span>
+                            </button>
+                            <button onclick="promptDeleteSaint('${saint.id}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center gap-1">
+                                <span>🗑️</span> <span class="hidden sm:inline">Excluir</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetPhotoSlotState(slot) {
+            photoSlotsState[slot] = { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null };
+            const fileInput = document.getElementById(`postPhotoFile${slot}`);
+            if (fileInput) fileInput.value = '';
+            
+            const container = document.getElementById(`previewContainer${slot}`);
+            if (container) container.classList.add('hidden');
+
+            const zoomSlider = document.getElementById(`zoomSlider${slot}`);
+            if (zoomSlider) zoomSlider.value = "1.0";
+            
+            const posYSlider = document.getElementById(`posYSlider${slot}`);
+            if (posYSlider) posYSlider.value = "50";
+
+            const posXSlider = document.getElementById(`posXSlider${slot}`);
+            if (posXSlider) posXSlider.value = "50";
+
+            setSlotFitModeUI(slot, 'cover');
+        }
+
+        function setSlotFitModeUI(slot, mode) {
+            const btnCover = document.getElementById(`btnFitCover${slot}`);
+            const btnContain = document.getElementById(`btnFitContain${slot}`);
+            if (btnCover && btnContain) {
+                if (mode === 'cover') {
+                    btnCover.className = 'px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm';
+                    btnContain.className = 'px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy';
+                } else {
+                    btnContain.className = 'px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm';
+                    btnCover.className = 'px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy';
+                }
+            }
+        }
+
+        function setSlotFitMode(slot, mode) {
+            photoSlotsState[slot].fitMode = mode;
+            setSlotFitModeUI(slot, mode);
+            renderSlotPreviewCanvas(slot);
+        }
+
+        function updateSlotAdjustment(slot) {
+            const zoomVal = parseFloat(document.getElementById(`zoomSlider${slot}`).value);
+            const posYVal = parseInt(document.getElementById(`posYSlider${slot}`).value);
+            const posXVal = parseInt(document.getElementById(`posXSlider${slot}`).value);
+
+            photoSlotsState[slot].zoom = zoomVal;
+            photoSlotsState[slot].posY = posYVal;
+            photoSlotsState[slot].posX = posXVal;
+
+            document.getElementById(`zoomVal${slot}`).innerText = `${zoomVal.toFixed(2)}x`;
+            
+            const posYLabel = posYVal < 40 ? 'Topo' : (posYVal > 60 ? 'Base' : 'Centro');
+            document.getElementById(`posYVal${slot}`).innerText = posYLabel;
+
+            const posXLabel = posXVal < 40 ? 'Esq.' : (posXVal > 60 ? 'Dir.' : 'Centro');
+            document.getElementById(`posXVal${slot}`).innerText = posXLabel;
+
+            renderSlotPreviewCanvas(slot);
+        }
+
+        function renderSlotPreviewCanvas(slot) {
+            const st = photoSlotsState[slot];
+            if (!st.imgObj) return;
+
+            const canvas = document.getElementById(`canvasPreview${slot}`);
+            if (!canvas) return;
+
+            const targetW = 800;
+            const targetH = 450; // Aspect 16:9
+            canvas.width = targetW;
+            canvas.height = targetH;
+
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0B1325'; // Sacred Navy background
+            ctx.fillRect(0, 0, targetW, targetH);
+
+            const imgW = st.imgObj.width;
+            const imgH = st.imgObj.height;
+
+            if (st.fitMode === 'contain') {
+                const scale = Math.min(targetW / imgW, targetH / imgH) * st.zoom;
+                const drawW = imgW * scale;
+                const drawH = imgH * scale;
+
+                const availX = targetW - drawW;
+                const availY = targetH - drawH;
+
+                const drawX = (availX / 2) + ((st.posX - 50) / 50) * (Math.abs(availX) / 2);
+                const drawY = (availY / 2) + ((st.posY - 50) / 50) * (Math.abs(availY) / 2);
+
+                ctx.drawImage(st.imgObj, drawX, drawY, drawW, drawH);
+            } else {
+                const baseScale = Math.max(targetW / imgW, targetH / imgH);
+                const scale = baseScale * st.zoom;
+
+                const scaledW = imgW * scale;
+                const scaledH = imgH * scale;
+
+                const overflowX = scaledW - targetW;
+                const overflowY = scaledH - targetH;
+
+                const drawX = - (overflowX * (st.posX / 100));
+                const drawY = - (overflowY * (st.posY / 100));
+
+                ctx.drawImage(st.imgObj, drawX, drawY, scaledW, scaledH);
+            }
+
+            st.resultDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        }
+
+        function handlePhotoSelect(slot, input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        photoSlotsState[slot].imgObj = img;
+                        photoSlotsState[slot].zoom = 1.0;
+                        photoSlotsState[slot].posX = 50;
+                        photoSlotsState[slot].posY = 50;
+                        photoSlotsState[slot].fitMode = 'cover';
+
+                        document.getElementById(`zoomSlider${slot}`).value = "1.0";
+                        document.getElementById(`posYSlider${slot}`).value = "50";
+                        document.getElementById(`posXSlider${slot}`).value = "50";
+                        setSlotFitModeUI(slot, 'cover');
+
+                        document.getElementById(`previewContainer${slot}`).classList.remove('hidden');
+                        renderSlotPreviewCanvas(slot);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadImgFromUrl(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = url;
+            });
+        }
+
+        function openAdminFormForCreate() {
+            editingSaintId = null;
+            document.getElementById('adminFormTitle').innerText = 'Publicar Nova História de Santo';
+
+            document.getElementById('postName').value = '';
+            document.getElementById('postFeast').value = '';
+            document.getElementById('postPatronage').value = '';
+            document.getElementById('postQuotes').value = '';
+            document.getElementById('postBio').value = '';
+
+            document.getElementById('postPhotoFile1').required = true;
+            document.getElementById('postPhotoFile2').required = true;
+            document.getElementById('postPhotoFile3').required = true;
+
+            resetPhotoSlotState(1);
+            resetPhotoSlotState(2);
+            resetPhotoSlotState(3);
+
+            document.getElementById('photosRequirementNote').innerText = 'Obrigatório na criação';
+
+            closeModal('adminDashboardModal');
+            openModal('adminPostModal');
+        }
+
+        async function openAdminFormForEdit(id) {
+            const saint = saintsData.find(s => s.id === id);
+            if (!saint) return;
+
+            editingSaintId = id;
+            document.getElementById('adminFormTitle').innerText = `Editar: ${saint.name}`;
+
+            document.getElementById('postName').value = saint.name || '';
+            document.getElementById('postFeast').value = saint.feastDay || '';
+            document.getElementById('postPatronage').value = saint.patronage || '';
+            document.getElementById('postQuotes').value = Array.isArray(saint.quotes) ? saint.quotes.join('\n') : (saint.quotes || '');
+            document.getElementById('postBio').value = saint.bio || '';
+
+            document.getElementById('postPhotoFile1').required = false;
+            document.getElementById('postPhotoFile2').required = false;
+            document.getElementById('postPhotoFile3').required = false;
+
+            resetPhotoSlotState(1);
+            resetPhotoSlotState(2);
+            resetPhotoSlotState(3);
+
+            // Carregar fotos existentes nos slots para permitir reajuste
+            if (saint.photos) {
+                for (let i = 0; i < 3; i++) {
+                    const slotNum = i + 1;
+                    const photoUrl = saint.photos[i];
+                    if (photoUrl) {
+                        const img = await loadImgFromUrl(photoUrl);
+                        if (img) {
+                            photoSlotsState[slotNum].imgObj = img;
+                            photoSlotsState[slotNum].resultDataUrl = photoUrl;
+                            document.getElementById(`previewContainer${slotNum}`).classList.remove('hidden');
+                            renderSlotPreviewCanvas(slotNum);
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('photosRequirementNote').innerText = 'Deixe em branco para manter as fotos atuais';
+
+            closeModal('adminDashboardModal');
+            openModal('adminPostModal');
+        }
+
+        function closeAdminFormAndReturn() {
+            closeModal('adminPostModal');
+            renderAdminSaintsList();
+            openModal('adminDashboardModal');
+        }
+
+        function promptDeleteSaint(id) {
+            const saint = saintsData.find(s => s.id === id);
+            if (!saint) return;
+
+            saintToDeleteId = id;
+            document.getElementById('deleteConfirmText').innerText = `Tem certeza que deseja excluir "${saint.name}" do catálogo? Esta ação não poderá ser desfeita.`;
+            openModal('deleteConfirmModal');
+        }
+
+        function confirmDeleteSaintAction() {
+            if (!saintToDeleteId) return;
+
+            saintsData = saintsData.filter(s => s.id !== saintToDeleteId);
+            localStorage.setItem('olhar_sacro_saints', JSON.stringify(saintsData));
+
+            saintToDeleteId = null;
+            closeModal('deleteConfirmModal');
+
+            renderSaintsGrid();
+            renderAdminSaintsList();
+            initQuoteCarousel();
+        }
+
+        async function handlePostSaint(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitPostBtn');
+            const originalBtnText = submitBtn.innerText;
+
+            const name = document.getElementById('postName').value.trim();
+            const feastDay = document.getElementById('postFeast').value.trim();
+            const patronage = document.getElementById('postPatronage').value.trim();
+            const quotesRaw = document.getElementById('postQuotes').value.trim();
+            const bio = document.getElementById('postBio').value.trim();
+
+            try {
+                submitBtn.innerText = 'Salvando Foto & Ajustes...';
+                submitBtn.disabled = true;
+
+                let existingSaint = editingSaintId ? saintsData.find(s => s.id === editingSaintId) : null;
+
+                const photo1 = photoSlotsState[1].resultDataUrl || (existingSaint ? existingSaint.photos[0] : '');
+                const photo2 = photoSlotsState[2].resultDataUrl || (existingSaint ? existingSaint.photos[1] : '');
+                const photo3 = photoSlotsState[3].resultDataUrl || (existingSaint ? existingSaint.photos[2] : '');
+
+                if (!editingSaintId && (!photo1 || !photo2 || !photo3)) {
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                const quotesArray = quotesRaw ? quotesRaw.split('\n').map(q => q.trim()).filter(q => q.length > 0) : [];
+
+                if (editingSaintId && existingSaint) {
+                    existingSaint.name = name;
+                    existingSaint.feastDay = feastDay;
+                    existingSaint.patronage = patronage;
+                    existingSaint.quotes = quotesArray;
+                    existingSaint.bio = bio;
+                    existingSaint.photos = [photo1, photo2, photo3];
+                } else {
+                    const newSaint = {
+                        id: name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-') + '-' + Date.now(),
+                        name: name,
+                        feastDay: feastDay,
+                        patronage: patronage,
+                        quotes: quotesArray,
+                        bio: bio,
+                        photos: [photo1, photo2, photo3]
+                    };
+                    saintsData.unshift(newSaint);
+                }
+
+                localStorage.setItem('olhar_sacro_saints', JSON.stringify(saintsData));
+
+                renderSaintsGrid();
+                closeModal('adminPostModal');
+
+                e.target.reset();
+                editingSaintId = null;
+
+                initQuoteCarousel();
+                renderAdminSaintsList();
+                openModal('adminDashboardModal');
+            } catch (err) {
+                console.error("Erro ao processar o post:", err);
+            } finally {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        window.onload = function() {
+            initData();
+            renderSaintsGrid();
+            initQuoteCarousel();
+        };
+    </script>
+</body>
+</html>
