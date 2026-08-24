@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olhar Sacro - Histórias de Santos</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Cinzel & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <!-- Supabase Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -38,6 +41,7 @@
             }
         }
     </script>
+
     <style>
         body {
             background-color: #FAF8F5;
@@ -71,15 +75,12 @@
 </head>
 <body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-sacred-gold selection:text-sacred-navy relative">
 
-    <!-- Ambient background light effect -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-sacred-gold/5 blur-3xl pointer-events-none -z-10 rounded-full"></div>
 
-    <!-- HEADER -->
     <header class="bg-sacred-navy/95 backdrop-blur-md text-white sticky top-0 z-30 shadow-lg border-b border-sacred-gold/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3.5">
-                <!-- Ícone da Cruz - 3 cliques abrem o painel secreto de senha -->
-                <button onclick="handleSecretClick()" title="Olhar Sacro" 
+                <button onclick="handleSecretClick()" title="Olhar Sacro (Clique 3 vezes para acesso admin)" 
                         class="relative group p-2 rounded-xl text-sacred-gold text-2xl sm:text-3xl hover:scale-110 transition-all duration-300 cursor-pointer focus:outline-none select-none">
                     <span class="absolute inset-0 bg-sacred-gold/10 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity"></span>
                     <span class="relative z-10 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]">✝</span>
@@ -102,12 +103,9 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
 
-        <!-- CARROSSEL DE FRASES DOS SANTOS -->
         <section class="bg-gradient-to-br from-sacred-navy via-sacred-navyLight to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-gold-glow border border-sacred-gold/30 relative overflow-hidden">
-            <!-- Background cross overlay -->
             <div class="absolute -right-8 -bottom-8 text-sacred-gold/5 text-9xl font-cinzel select-none pointer-events-none">
                 ✝
             </div>
@@ -118,7 +116,6 @@
                     OLHAR SACRO
                 </div>
 
-                <!-- Card de Frase Animado -->
                 <div id="quoteCard" class="min-h-[120px] flex flex-col justify-center transition-all duration-500 transform">
                     <p id="quoteText" class="font-cinzel text-lg sm:text-2xl italic font-medium text-sacred-goldLight leading-relaxed drop-shadow">
                         “É justo que muito custe o que muito vale.”
@@ -128,17 +125,47 @@
                     </p>
                 </div>
 
-                <!-- Indicadores do Carrossel -->
                 <div id="quoteIndicators" class="flex justify-center items-center gap-2 pt-2">
-                    <!-- Gerado Dinamicamente via JS -->
+                    <!-- Gerado Dinamicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- BARRA DE PESQUISA -->
+        <section id="saintOfDaySection" class="space-y-6">
+            <div id="sodHeader" class="flex flex-wrap items-center justify-between gap-3 px-1">
+                <div class="inline-flex items-center gap-2 text-xs font-cinzel font-bold text-sacred-goldDark bg-sacred-gold/10 px-4 py-2 rounded-full border border-sacred-gold/30 shadow-sm backdrop-blur-sm">
+                    <span id="sodDateLabel">Carregando data...</span>
+                </div>
+            </div>
+
+            <!-- Grid de Santos do Dia (Lado a Lado) -->
+            <div id="sodGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Gerado via JavaScript -->
+            </div>
+
+            <!-- Empty State do Santo do Dia -->
+            <div id="sodEmptyContent" class="hidden rounded-3xl bg-white border border-sacred-gold/40 shadow-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center space-y-4 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-sacred-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="w-16 h-16 rounded-2xl bg-sacred-navy/5 border border-sacred-gold/30 flex items-center justify-center text-sacred-gold text-2xl shadow-inner relative z-10">
+                    ✝
+                </div>
+                <div class="relative z-10">
+                    <h2 class="font-cinzel text-xl sm:text-2xl font-bold text-sacred-navy">
+                        Nenhum Santo Celebrado Nesta Data
+                    </h2>
+                </div>
+                <div class="pt-2 relative z-10">
+                    <a href="#saintsGrid" class="inline-flex items-center gap-2 px-6 py-3 bg-sacred-navy text-sacred-goldLight font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-all duration-300 shadow-md border border-sacred-gold/30">
+                        <span>Explorar Catálogo Completo</span>
+                        <span>↓</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <section class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80">
             <div class="relative w-full">
-                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar santo pelo nome..." 
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar santo pelo nome ou data festiva (ex: Francisco, 04 de Outubro)..." 
                        class="w-full pl-12 pr-12 py-4 rounded-2xl bg-slate-50/80 border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-2 focus:ring-sacred-gold/20 text-sm sm:text-base transition-all shadow-inner">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none">🔍</span>
                 <button onclick="clearSearch()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold p-1.5 rounded-full hover:bg-slate-200/50 transition-colors">
@@ -147,16 +174,14 @@
             </div>
         </section>
 
-        <!-- GRADE DE SANTOS -->
         <section id="saintsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <!-- Gerado via JavaScript -->
         </section>
 
-        <!-- ESTADO VAZIO -->
         <div id="emptyState" class="hidden text-center py-16 bg-white/90 rounded-3xl border border-dashed border-slate-300 space-y-3 shadow-sm">
             <div class="text-4xl">📖</div>
             <h3 class="font-cinzel text-lg font-bold text-sacred-navy">Nenhum santo encontrado</h3>
-            <p class="text-xs text-slate-500 max-w-sm mx-auto">Tente buscar por outro nome de santo.</p>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Tente buscar por outro nome de santo ou data celebrativa.</p>
             <button onclick="clearSearch()" class="mt-2 px-5 py-2.5 bg-sacred-navy text-sacred-gold text-xs font-cinzel font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
                 Limpar Pesquisa
             </button>
@@ -164,17 +189,15 @@
 
     </main>
 
-    <!-- FOOTER -->
     <footer class="bg-sacred-navy text-slate-400 border-t border-sacred-gold/20 py-8 text-center text-xs space-y-2 relative mt-12">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/40 to-transparent"></div>
         <p class="font-cinzel text-sacred-goldLight font-medium tracking-wide">OLHAR SACRO</p>
         <p class="text-slate-500">Desenvolvido por Kauã Rodrigues de Sousa Santos</p>
     </footer>
 
-    <!-- MODAL DETALHES DO SANTO -->
+    <!-- Modal Detalhe do Santo -->
     <div id="saintDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
-            <!-- Modal Header -->
             <div class="bg-sacred-navy text-white p-6 flex justify-between items-start border-b border-sacred-gold/30 relative">
                 <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/50 to-transparent"></div>
                 <div>
@@ -188,41 +211,41 @@
                 </button>
             </div>
 
-            <!-- Modal Content -->
             <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-grow text-slate-700">
-                <!-- Patronage -->
                 <div id="patronageContainer" class="hidden bg-sacred-cream p-4 rounded-2xl border border-sacred-gold/30 shadow-sm">
                     <span class="text-xs font-cinzel font-bold text-sacred-goldDark uppercase tracking-wider block mb-1">Padroeiro de:</span>
                     <p id="detailPatronage" class="text-sm font-medium text-sacred-navy"></p>
                 </div>
 
-                <!-- Gallery 3 Photos -->
                 <div class="space-y-3">
-                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Galeria de Imagens</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Galeria de Imagens</span>
+                        <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">🔍 Clique na foto para abrir com zoom</span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div class="sm:col-span-3 aspect-video bg-sacred-navy rounded-2xl overflow-hidden border border-sacred-gold/20 shadow-md">
-                            <img id="galleryMainImg" src="" alt="Imagem Principal" class="w-full h-full object-cover">
+                        <div onclick="openCurrentSaintLightbox()" class="sm:col-span-3 aspect-video bg-sacred-navy rounded-2xl overflow-hidden border border-sacred-gold/20 shadow-md relative group cursor-pointer">
+                            <img id="galleryMainImg" src="" alt="Imagem Principal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="absolute inset-0 bg-sacred-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-sacred-goldLight font-cinzel text-xs font-bold backdrop-blur-[2px]">
+                                <span class="bg-sacred-navy/90 px-4 py-2 rounded-xl border border-sacred-gold/40 shadow-lg flex items-center gap-2">
+                                    <span>🔍</span> Ampliar e Ver em Zoom
+                                </span>
+                            </div>
                         </div>
-                        <div id="galleryThumbnails" class="sm:col-span-3 grid grid-cols-3 gap-3">
-                            <!-- Thumbnails JS -->
-                        </div>
+                        <div id="galleryThumbnails" class="sm:col-span-3 grid grid-cols-3 gap-3"></div>
                     </div>
                 </div>
 
-                <!-- Biografia Completa -->
                 <div class="space-y-2">
                     <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">História / Biografia Completa</span>
                     <p id="detailBio" class="text-sm sm:text-base leading-relaxed whitespace-pre-line text-slate-600 bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-inner"></p>
                 </div>
 
-                <!-- Frases do Santo -->
                 <div id="quotesContainer" class="hidden space-y-2">
                     <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Frases e Ensinamentos</span>
                     <div id="detailQuotes" class="space-y-2.5 text-sm italic font-cinzel text-sacred-navy bg-sacred-cream p-6 rounded-2xl border border-sacred-gold/30 shadow-sm"></div>
                 </div>
             </div>
 
-            <!-- Modal Footer -->
             <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
                 <button onclick="closeModal('saintDetailModal')" class="px-6 py-2.5 bg-sacred-navy text-sacred-gold font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
                     Fechar
@@ -231,7 +254,7 @@
         </div>
     </div>
 
-    <!-- MODAL SENHA SECRETA -->
+    <!-- Modal Senha Secreta -->
     <div id="secretPasswordModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-sacred-navy text-white w-full max-w-sm p-6 sm:p-8 rounded-3xl border border-sacred-gold/40 shadow-gold-glow space-y-5 text-center animate-fade-in relative overflow-hidden">
             <div class="text-4xl text-sacred-gold drop-shadow">🔑</div>
@@ -260,28 +283,41 @@
         </div>
     </div>
 
-    <!-- MODAL DASHBOARD ADMINISTRATIVO -->
+    <!-- Modal Dashboard Admin -->
     <div id="adminDashboardModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
             <div class="bg-sacred-navy text-white p-6 flex justify-between items-center border-b border-sacred-gold/30">
                 <div>
                     <h3 class="font-cinzel text-xl font-bold text-sacred-goldLight">Painel de Administração</h3>
-                    <p class="text-xs text-slate-300">Gerencie e publique as histórias dos santos no site.</p>
+                    <p class="text-xs text-slate-300">Gerencie e publique as histórias dos santos no banco de dados.</p>
                 </div>
                 <button onclick="closeModal('adminDashboardModal')" class="text-slate-300 hover:text-white text-2xl font-bold">
                     ✕
                 </button>
             </div>
 
-            <div class="p-6 flex justify-between items-center bg-slate-50 border-b border-slate-200">
-                <span class="text-xs font-cinzel font-bold text-sacred-navy">Catálogo Atual</span>
-                <button onclick="openAdminFormForCreate()" class="px-4 py-2.5 bg-sacred-gold text-sacred-navy font-cinzel text-xs font-bold rounded-xl hover:bg-sacred-goldLight transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>➕</span> Publicar Nova História
-                </button>
+            <!-- Cabeçalho e Barra de Pesquisa do Admin -->
+            <div class="p-4 sm:p-6 bg-slate-50 border-b border-slate-200 space-y-3">
+                <div class="flex flex-wrap sm:flex-nowrap justify-between items-center gap-3">
+                    <span class="text-xs font-cinzel font-bold text-sacred-navy">Catálogo Atual</span>
+                    <button onclick="openAdminFormForCreate()" class="px-4 py-2.5 bg-sacred-gold text-sacred-navy font-cinzel text-xs font-bold rounded-xl hover:bg-sacred-goldLight transition-colors flex items-center gap-1.5 shadow-sm shrink-0">
+                        <span>➕</span> Publicar Nova História
+                    </button>
+                </div>
+
+                <!-- Campo de Pesquisa no Painel -->
+                <div class="relative w-full">
+                    <input type="text" id="adminSearchInput" oninput="handleAdminSearch()" placeholder="Pesquisar santo por nome..." 
+                           class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold text-xs shadow-sm">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">🔍</span>
+                    <button onclick="clearAdminSearch()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold p-1">
+                        ✕
+                    </button>
+                </div>
             </div>
 
             <div id="adminSaintsList" class="p-6 overflow-y-auto flex-grow space-y-3">
-                <!-- Lista para Edição e Exclusão JS -->
+                <!-- Lista para Edição JS -->
             </div>
 
             <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
@@ -292,7 +328,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULÁRIO DE POSTAGEM / EDIÇÃO -->
+    <!-- Modal Form de Criação/Edição -->
     <div id="adminPostModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-sacred-gold/30 animate-fade-in">
             <div class="bg-sacred-navy text-white p-6 flex justify-between items-center border-b border-sacred-gold/30">
@@ -305,6 +341,9 @@
             </div>
 
             <form onsubmit="handlePostSaint(event)" class="p-6 overflow-y-auto flex-grow space-y-5 text-xs sm:text-sm">
+                <!-- Alerta de Erro Visual no Formulário -->
+                <div id="formErrorMessage" class="hidden bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl text-xs font-semibold leading-relaxed"></div>
+
                 <div>
                     <label class="block font-cinzel font-bold text-sacred-navy mb-1.5">Nome do Santo *</label>
                     <input type="text" id="postName" required placeholder="Ex: São Francisco de Assis"
@@ -336,18 +375,18 @@
                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-1 focus:ring-sacred-gold"></textarea>
                 </div>
 
-                <!-- SELEÇÃO E AJUSTE DE FOTOS DO DISPOSITIVO -->
+                <!-- Seção de Fotos -->
                 <div class="space-y-4 border-t border-slate-200 pt-5">
                     <div class="flex justify-between items-center">
                         <div>
                             <label class="block font-cinzel font-bold text-sacred-navy text-sm">3 Fotos do Santo (Selecione do Dispositivo)</label>
-                            <p class="text-[11px] text-slate-500">Você pode ajustar o enquadramento, zoom e foco de cada foto abaixo.</p>
+                            <p class="text-[11px] text-slate-500">Ajuste o enquadramento, zoom e foco de cada foto abaixo.</p>
                         </div>
                         <span id="photosRequirementNote" class="text-[10px] text-slate-400 font-bold"></span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-5">
-                        <!-- Foto 1 (Capa) -->
+                        <!-- Slot Foto 1 -->
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                             <div class="flex items-center justify-between">
                                 <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 1 (Capa Principal)</label>
@@ -356,16 +395,14 @@
                             <input type="file" id="postPhotoFile1" accept="image/*" onchange="handlePhotoSelect(1, this)"
                                    class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sacred-navy file:text-sacred-gold hover:file:bg-slate-800 transition-colors">
                             
-                            <!-- Container Prévia Canvas -->
                             <div id="previewContainer1" class="hidden space-y-3 pt-1">
                                 <div class="aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-slate-300 shadow-md relative">
                                     <canvas id="canvasPreview1" class="w-full h-full object-contain"></canvas>
                                 </div>
 
-                                <!-- Painel de Ajustes -->
                                 <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
                                     <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 1)</span>
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Enquadramento (Foto 1)</span>
                                         <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
                                             <button type="button" onclick="setSlotFitMode(1, 'cover')" id="btnFitCover1" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
                                             <button type="button" onclick="setSlotFitMode(1, 'contain')" id="btnFitContain1" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
@@ -399,7 +436,7 @@
                             </div>
                         </div>
 
-                        <!-- Foto 2 -->
+                        <!-- Slot Foto 2 -->
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                             <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 2 (Galeria)</label>
                             <input type="file" id="postPhotoFile2" accept="image/*" onchange="handlePhotoSelect(2, this)"
@@ -412,7 +449,7 @@
 
                                 <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
                                     <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 2)</span>
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Enquadramento (Foto 2)</span>
                                         <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
                                             <button type="button" onclick="setSlotFitMode(2, 'cover')" id="btnFitCover2" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
                                             <button type="button" onclick="setSlotFitMode(2, 'contain')" id="btnFitContain2" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
@@ -446,7 +483,7 @@
                             </div>
                         </div>
 
-                        <!-- Foto 3 -->
+                        <!-- Slot Foto 3 -->
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                             <label class="block text-xs font-bold text-sacred-navy font-cinzel">Foto 3 (Galeria)</label>
                             <input type="file" id="postPhotoFile3" accept="image/*" onchange="handlePhotoSelect(3, this)"
@@ -459,7 +496,7 @@
 
                                 <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5 text-xs">
                                     <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Ajustar Enquadramento (Foto 3)</span>
+                                        <span class="font-cinzel font-bold text-sacred-navy text-[11px]">⚙️ Enquadramento (Foto 3)</span>
                                         <div class="flex gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
                                             <button type="button" onclick="setSlotFitMode(3, 'cover')" id="btnFitCover3" class="px-2 py-1 rounded-md text-[10px] font-bold bg-sacred-navy text-sacred-gold shadow-sm">Preencher</button>
                                             <button type="button" onclick="setSlotFitMode(3, 'contain')" id="btnFitContain3" class="px-2 py-1 rounded-md text-[10px] font-bold text-slate-600 hover:text-sacred-navy">Inteira</button>
@@ -507,7 +544,7 @@
         </div>
     </div>
 
-    <!-- MODAL CONFIRMAÇÃO DE EXCLUSÃO -->
+    <!-- Modal Exclusão -->
     <div id="deleteConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-sm p-6 sm:p-8 rounded-3xl shadow-2xl border border-rose-200 text-center space-y-4 animate-fade-in">
             <div class="text-4xl text-rose-500">⚠️</div>
@@ -525,11 +562,60 @@
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL DA APLICAÇÃO -->
+    <!-- Modal Lightbox de Foto com Zoom e Arrasto -->
+    <div id="photoLightboxModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex flex-col justify-between p-4 hidden select-none animate-fade-in">
+        <!-- Barra de Controle Superior -->
+        <div class="flex items-center justify-between text-white z-30 max-w-5xl w-full mx-auto px-2 py-2">
+            <span id="lightboxCounter" class="text-xs font-cinzel text-sacred-gold font-bold tracking-wider">
+                Foto 1 de 1
+            </span>
+            <div class="flex items-center gap-2">
+                <button onclick="zoomLightbox(0.3)" class="p-2 bg-slate-800/80 hover:bg-slate-700 text-sacred-gold rounded-xl text-sm transition-colors border border-sacred-gold/30" title="Aumentar Zoom">
+                    🔍 +
+                </button>
+                <button onclick="zoomLightbox(-0.3)" class="p-2 bg-slate-800/80 hover:bg-slate-700 text-sacred-gold rounded-xl text-sm transition-colors border border-sacred-gold/30" title="Diminuir Zoom">
+                    🔍 -
+                </button>
+                <button onclick="resetLightboxZoom()" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-sacred-gold text-xs font-bold rounded-xl transition-colors border border-sacred-gold/30" title="Resetar Zoom">
+                    100%
+                </button>
+                <button onclick="closeModal('photoLightboxModal')" class="p-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-base font-bold transition-colors ml-2 shadow-md">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <!-- Área Central da Imagem com Zoom e Pan -->
+        <div id="lightboxViewport" class="relative flex-grow flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing my-2">
+            <img id="lightboxImg" src="" alt="Foto ampliada do santo" 
+                 class="max-h-[82vh] max-w-[92vw] object-contain transition-transform duration-100 ease-out rounded-xl shadow-2xl pointer-events-none">
+            
+            <!-- Botões de Navegação -->
+            <button id="lightboxPrevBtn" onclick="navigateLightbox(-1)" 
+                    class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 p-3.5 bg-sacred-navy/80 hover:bg-sacred-navy text-sacred-gold rounded-full text-xl transition-all border border-sacred-gold/40 z-30 shadow-lg">
+                ❮
+            </button>
+            <button id="lightboxNextBtn" onclick="navigateLightbox(1)" 
+                    class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 p-3.5 bg-sacred-navy/80 hover:bg-sacred-navy text-sacred-gold rounded-full text-xl transition-all border border-sacred-gold/40 z-30 shadow-lg">
+                ❯
+            </button>
+        </div>
+
+        <!-- Legenda e Instruções -->
+        <div class="text-center text-slate-400 text-[11px] font-sans z-30 pb-1">
+            Dica: Use a roda do mouse ou clique duplo para dar zoom. Arraste a imagem para mover.
+        </div>
+    </div>
+
     <script>
+        // Configuração Supabase
+        const SUPABASE_URL = 'https://tuwcqdygnmckxacnhpmp.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_CzzocUO-w183rgHooHIGLg_S9iB4tH0';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const INITIAL_SAINTS = [
             {
-                id: 'sao-francisco-de-assis',
+                id: 1,
                 name: 'São Francisco de Assis',
                 feastDay: '04 de Outubro',
                 patronage: 'Animais, Ecologia e Itália',
@@ -546,7 +632,7 @@
                 ]
             },
             {
-                id: 'santa-teresinha',
+                id: 2,
                 name: 'Santa Teresinha do Menino Jesus',
                 feastDay: '01 de Outubro',
                 patronage: 'Missões e Floristas',
@@ -561,76 +647,191 @@
                     'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80',
                     'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80'
                 ]
-            },
-            {
-                id: 'sao-bento',
-                name: 'São Bento de Núrsia',
-                feastDay: '11 de Julho',
-                patronage: 'Europa e Monasticismo Ocidental',
-                bio: `São Bento (480-547) nasceu em Núrsia, Itália. Retirou-se para uma gruta em Subiaco para viver em oração e penitência antes de fundar o famoso Mosteiro de Monte Cassino.\n\nSua Regra Monástica baseada no equilíbrio entre a Oração e o Trabalho (Ora et Labora) moldou a civilização ocidental na Idade Média. A Medalha de São Bento é um sacramental amplamente venerado contra os males do espírito.`,
-                quotes: [
-                    'Ora et Labora (Ora e Trabalha).',
-                    'Prefira nada ao amor de Cristo.',
-                    'A oração deve ser curta e pura, a não ser que se prolongue por um afeto de inspiração divina.'
-                ],
-                photos: [
-                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80'
-                ]
-            },
-            {
-                id: 'santa-teresa-davila',
-                name: "Santa Teresa d'Ávila",
-                feastDay: '15 de Outubro',
-                patronage: 'Espanha e Escritores',
-                bio: `Santa Teresa de Jesus (1515-1582) foi uma mística carmelita, escritora e reformadora da Ordem dos Carmelitas Descalços. Foi a primeira mulher proclamada Doutora da Igreja pelo Papa Paulo VI.\n\nAutora de obras fundamentais da vida espiritual como 'O Castelo Interior' e 'Caminho de Perfeição', ensinou o caminho da oração mental e da amizade íntima com Deus.`,
-                quotes: [
-                    "É justo que muito custe o que muito vale.",
-                    "Nada te perturbe, nada te espante, tudo passa, Deus não muda.",
-                    "A oração não é outra coisa senão um trato de amizade com Deus."
-                ],
-                photos: [
-                    'https://images.unsplash.com/photo-1548625149-fc4a29cf7092?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1509021436468-8977c8062118?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80'
-                ]
             }
         ];
 
         let saintsData = [];
         let currentSearchQuery = '';
+        let adminSearchQuery = '';
         let editingSaintId = null;
         let saintToDeleteId = null;
 
-        // Estado das 3 fotos no formulário
+        // Estado da Galeria e Lightbox com Zoom
+        let currentDetailPhotos = [];
+        let currentDetailPhotoIndex = 0;
+        let lightboxZoom = 1.0;
+        let lightboxPanX = 0;
+        let lightboxPanY = 0;
+        let isDraggingLightbox = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        let currentSodList = [];
+        let isTodaySaintFound = false;
+
+        let secretClickCount = 0;
+        let secretClickTimer = null;
+        let activeQuotesList = [];
+        let currentQuoteIndex = 0;
+        let quoteInterval = null;
+
         const photoSlotsState = {
             1: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null },
             2: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null },
             3: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null }
         };
 
-        // Controle do Carrossel de Frases
-        let activeQuotesList = [];
-        let currentQuoteIndex = 0;
-        let quoteInterval = null;
+        async function initData() {
+            const badge = document.getElementById('saintCountBadge');
+            if (badge) badge.innerText = 'Carregando...';
 
-        // Contador para o botão secreto
-        let secretClickCount = 0;
-        let secretClickTimer = null;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('santos')
+                    .select('*')
+                    .order('id', { ascending: true });
 
-        function initData() {
-            const stored = localStorage.getItem('olhar_sacro_saints');
-            if (stored) {
-                try {
-                    saintsData = JSON.parse(stored);
-                } catch(e) {
-                    saintsData = INITIAL_SAINTS;
+                if (error) {
+                    console.warn('Usando lista local:', error.message);
+                    if (saintsData.length === 0) saintsData = INITIAL_SAINTS;
+                } else if (data && data.length > 0) {
+                    saintsData = data.map(item => ({
+                        id: item.id,
+                        name: item.nome || item.name || '',
+                        feastDay: item.dia_festivo || item.feastDay || '',
+                        patronage: item.padroado || item.patronage || '',
+                        bio: item.biografia || item.bio || '',
+                        quotes: item.frases || item.quotes || [],
+                        photos: item.fotos || item.photos || []
+                    }));
+                } else {
+                    if (saintsData.length === 0) saintsData = INITIAL_SAINTS;
+                }
+            } catch (err) {
+                console.error('Erro na requisição ao Supabase:', err);
+                if (saintsData.length === 0) saintsData = INITIAL_SAINTS;
+            }
+
+            renderSaintsGrid();
+            renderSaintOfDay();
+            initQuoteCarousel();
+        }
+
+        function isTodayFeast(feastDayStr) {
+            if (!feastDayStr) return false;
+
+            const today = new Date();
+            const day = today.getDate();
+            const monthIndex = today.getMonth();
+
+            const months = [
+                'janeiro', 'fevereiro', 'março', 'marco', 'abril', 'maio', 'junho',
+                'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+            ];
+            const currentMonthName = months[monthIndex];
+
+            const strLower = feastDayStr.toLowerCase().trim();
+
+            const dayRegex = new RegExp(`\\b0?${day}\\b`);
+            const monthRegex = new RegExp(`\\b(${currentMonthName}|0?${monthIndex + 1})\\b`);
+
+            return dayRegex.test(strLower) && monthRegex.test(strLower);
+        }
+
+        function renderSaintOfDay() {
+            if (saintsData.length === 0) return;
+
+            const dateOptions = { day: '2-digit', month: 'long' };
+            const todayFormatted = new Date().toLocaleDateString('pt-BR', dateOptions);
+            
+            // Busca AUTOMÁTICA exclusivamente por data festiva do dia de hoje
+            let sods = saintsData.filter(s => isTodayFeast(s.feastDay));
+
+            const dateLabel = document.getElementById('sodDateLabel');
+
+            if (sods.length > 0) {
+                isTodaySaintFound = true;
+                currentSodList = sods;
+                if (dateLabel) {
+                    dateLabel.innerText = `${todayFormatted} • ${sods.length > 1 ? 'Memórias Litúrgicas do Dia' : 'Memória Litúrgica'}`;
                 }
             } else {
-                saintsData = INITIAL_SAINTS;
-                localStorage.setItem('olhar_sacro_saints', JSON.stringify(INITIAL_SAINTS));
+                // Caso não haja nenhum santo celebrado no dia de hoje
+                isTodaySaintFound = false;
+                currentSodList = [];
+                if (dateLabel) {
+                    dateLabel.innerText = `${todayFormatted} • Calendário Litúrgico`;
+                }
             }
+
+            updateSodDisplay();
+        }
+
+        function updateSodDisplay() {
+            const sodGrid = document.getElementById('sodGrid');
+            const sodEmptyContent = document.getElementById('sodEmptyContent');
+
+            if (!sodGrid) return;
+
+            // Se não houver santo hoje, exibe o cartão informativo e oculta o grid
+            if (!isTodaySaintFound || currentSodList.length === 0) {
+                sodGrid.classList.add('hidden');
+                sodGrid.innerHTML = '';
+                if (sodEmptyContent) sodEmptyContent.classList.remove('hidden');
+                return;
+            }
+
+            // Quando houver santo(s) no dia
+            sodGrid.classList.remove('hidden');
+            if (sodEmptyContent) sodEmptyContent.classList.add('hidden');
+
+            // Ajusta a grade dinamicamente (1 santo = centralizado/destaque | N santos = grid lado a lado)
+            if (currentSodList.length === 1) {
+                sodGrid.className = "grid grid-cols-1 max-w-4xl mx-auto";
+            } else {
+                sodGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8";
+            }
+
+            sodGrid.innerHTML = currentSodList.map(sod => {
+                const coverPhoto = (sod.photos && sod.photos[0]) ? sod.photos[0] : '';
+                const isSingle = currentSodList.length === 1;
+
+                return `
+                    <div class="relative group rounded-3xl bg-white border border-sacred-gold/40 shadow-xl overflow-hidden transition-all duration-300 hover:border-sacred-gold flex flex-col justify-between">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-sacred-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="p-6 sm:p-8 flex flex-col ${isSingle ? 'lg:flex-row' : ''} gap-6 sm:gap-8 relative z-10 h-full justify-between">
+                            <div class="${isSingle ? 'w-full lg:w-1/3 aspect-[4/3]' : 'w-full aspect-[16/9] sm:aspect-[4/3]'} rounded-2xl overflow-hidden bg-sacred-navy border-2 border-sacred-gold/50 shadow-gold-glow relative shrink-0">
+                                <img src="${coverPhoto}" alt="${sod.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-sacred-navy/80 via-transparent to-transparent"></div>
+                                <span class="absolute top-3 left-3 bg-sacred-gold text-sacred-navy font-cinzel text-[10px] sm:text-xs font-black tracking-widest px-3 py-1 rounded-full uppercase shadow-md flex items-center gap-1.5">
+                                    <span>✝</span> Santo do Dia
+                                </span>
+                            </div>
+
+                            <div class="w-full ${isSingle ? 'lg:w-2/3' : ''} space-y-4 text-left flex flex-col justify-between flex-grow">
+                                <div class="space-y-2">
+                                    <h2 class="font-cinzel text-xl sm:text-2xl font-bold text-sacred-navy">
+                                        ${sod.name}
+                                    </h2>
+                                    <p class="text-xs sm:text-sm font-semibold text-sacred-goldDark font-cinzel">
+                                        ${sod.patronage ? `Padroeiro de: ${sod.patronage}` : 'Santo da Igreja'}
+                                    </p>
+                                    <p class="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                                        ${sod.bio || ''}
+                                    </p>
+                                </div>
+
+                                <div class="pt-2">
+                                    <button onclick="openSaintDetailModal('${sod.id}')" class="px-5 py-2.5 bg-sacred-navy text-sacred-goldLight font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-all duration-300 shadow-md border border-sacred-gold/30 hover:shadow-gold-glow flex items-center gap-2">
+                                        <span>✝ Conhecer História Completa</span>
+                                        <span>→</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function refreshQuotesList() {
@@ -749,7 +950,10 @@
 
             const filtered = saintsData.filter(saint => {
                 if (!currentSearchQuery) return true;
-                return saint.name.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                const q = currentSearchQuery.toLowerCase().trim();
+                const nameMatch = saint.name ? saint.name.toLowerCase().includes(q) : false;
+                const feastMatch = saint.feastDay ? saint.feastDay.toLowerCase().includes(q) : false;
+                return nameMatch || feastMatch;
             });
 
             if (countBadge) {
@@ -846,7 +1050,7 @@
 
             if (passwordInput === 'ka19sa06') {
                 closeModal('secretPasswordModal');
-                renderAdminSaintsList();
+                clearAdminSearch();
                 openModal('adminDashboardModal');
             } else {
                 errorMsg.classList.remove('hidden');
@@ -854,67 +1058,252 @@
         }
 
         function openSaintDetailModal(id) {
-            const saint = saintsData.find(s => s.id === id);
+            const saint = saintsData.find(s => s.id.toString() === id.toString());
             if (!saint) return;
 
-            document.getElementById('detailTitle').innerText = saint.name || '';
-            document.getElementById('detailFeast').innerText = saint.feastDay ? `Dia Festivo: ${saint.feastDay}` : '';
-            document.getElementById('detailBio').innerText = saint.bio || '';
-
-            const patronageContainer = document.getElementById('patronageContainer');
-            const detailPatronage = document.getElementById('detailPatronage');
-            if (saint.patronage && saint.patronage.trim()) {
-                detailPatronage.innerText = saint.patronage;
-                patronageContainer.classList.remove('hidden');
+            document.getElementById('detailTitle').innerText = saint.name;
+            document.getElementById('detailFeast').innerText = saint.feastDay ? `Festa: ${saint.feastDay}` : '';
+            
+            const patContainer = document.getElementById('patronageContainer');
+            if (saint.patronage) {
+                document.getElementById('detailPatronage').innerText = saint.patronage;
+                patContainer.classList.remove('hidden');
             } else {
-                patronageContainer.classList.add('hidden');
+                patContainer.classList.add('hidden');
             }
 
-            const quotesContainer = document.getElementById('quotesContainer');
-            const detailQuotes = document.getElementById('detailQuotes');
+            document.getElementById('detailBio').innerText = saint.bio || 'Biografia em breve.';
+
+            // Frases
+            const qContainer = document.getElementById('quotesContainer');
+            const qList = document.getElementById('detailQuotes');
             if (saint.quotes && saint.quotes.length > 0) {
-                detailQuotes.innerHTML = saint.quotes.map(q => `<p class="border-l-2 border-sacred-gold pl-3 py-0.5">"${q}"</p>`).join('');
-                quotesContainer.classList.remove('hidden');
+                qList.innerHTML = saint.quotes.map(q => `<p class="italic">“${q}”</p>`).join('');
+                qContainer.classList.remove('hidden');
             } else {
-                quotesContainer.classList.add('hidden');
+                qContainer.classList.add('hidden');
             }
+
+            // Fotos e Lightbox
+            currentDetailPhotos = (saint.photos && saint.photos.length > 0) ? saint.photos : [];
+            currentDetailPhotoIndex = 0;
 
             const mainImg = document.getElementById('galleryMainImg');
-            const thumbnailsContainer = document.getElementById('galleryThumbnails');
-            const photos = (saint.photos && saint.photos.length > 0) ? saint.photos : ['', '', ''];
+            const thumbsContainer = document.getElementById('galleryThumbnails');
 
-            if (mainImg) mainImg.src = photos[0] || '';
-
-            if (thumbnailsContainer) {
-                thumbnailsContainer.innerHTML = photos.map((p, index) => `
-                    <div onclick="changeGalleryMainImage('${p}')" class="aspect-video rounded-xl overflow-hidden bg-sacred-navy border border-slate-200 cursor-pointer hover:border-sacred-gold transition-colors shadow-sm">
-                        <img src="${p}" alt="Foto ${index + 1}" class="w-full h-full object-cover hover:opacity-90 transition-opacity">
-                    </div>
+            if (currentDetailPhotos.length > 0) {
+                mainImg.src = currentDetailPhotos[0];
+                thumbsContainer.innerHTML = currentDetailPhotos.map((photo, idx) => `
+                    <button onclick="setMainGalleryPhotoIndex(${idx})" class="aspect-video bg-sacred-navy rounded-xl overflow-hidden border ${idx === 0 ? 'border-sacred-gold ring-2 ring-sacred-gold/40' : 'border-slate-200'} hover:border-sacred-gold transition-all focus:outline-none relative group">
+                        <img src="${photo}" alt="Foto ${idx + 1}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </button>
                 `).join('');
+            } else {
+                mainImg.src = '';
+                thumbsContainer.innerHTML = '';
             }
 
             openModal('saintDetailModal');
         }
 
-        function changeGalleryMainImage(url) {
+        function setMainGalleryPhotoIndex(idx) {
+            if (!currentDetailPhotos || currentDetailPhotos.length <= idx) return;
+            currentDetailPhotoIndex = idx;
+            
             const mainImg = document.getElementById('galleryMainImg');
-            if (mainImg && url) mainImg.src = url;
+            if (mainImg) mainImg.src = currentDetailPhotos[idx];
+
+            const thumbsContainer = document.getElementById('galleryThumbnails');
+            if (thumbsContainer) {
+                const buttons = thumbsContainer.querySelectorAll('button');
+                buttons.forEach((btn, buttonIdx) => {
+                    if (buttonIdx === idx) {
+                        btn.className = "aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-sacred-gold ring-2 ring-sacred-gold/40 transition-all focus:outline-none relative group";
+                    } else {
+                        btn.className = "aspect-video bg-sacred-navy rounded-xl overflow-hidden border border-slate-200 hover:border-sacred-gold transition-all focus:outline-none relative group";
+                    }
+                });
+            }
+        }
+
+        function openCurrentSaintLightbox() {
+            if (!currentDetailPhotos || currentDetailPhotos.length === 0) return;
+            openPhotoLightbox(currentDetailPhotos, currentDetailPhotoIndex);
+        }
+
+        function openPhotoLightbox(photos, initialIdx = 0) {
+            currentDetailPhotos = photos;
+            currentDetailPhotoIndex = initialIdx;
+            
+            resetLightboxZoom();
+            updateLightboxContent();
+            openModal('photoLightboxModal');
+        }
+
+        function updateLightboxContent() {
+            const img = document.getElementById('lightboxImg');
+            const counter = document.getElementById('lightboxCounter');
+            const prevBtn = document.getElementById('lightboxPrevBtn');
+            const nextBtn = document.getElementById('lightboxNextBtn');
+
+            if (currentDetailPhotos.length > 0) {
+                img.src = currentDetailPhotos[currentDetailPhotoIndex];
+                counter.innerText = `Foto ${currentDetailPhotoIndex + 1} de ${currentDetailPhotos.length}`;
+            }
+
+            if (currentDetailPhotos.length > 1) {
+                if (prevBtn) prevBtn.classList.remove('hidden');
+                if (nextBtn) nextBtn.classList.remove('hidden');
+            } else {
+                if (prevBtn) prevBtn.classList.add('hidden');
+                if (nextBtn) nextBtn.classList.add('hidden');
+            }
+
+            updateLightboxTransform();
+        }
+
+        function navigateLightbox(direction) {
+            if (!currentDetailPhotos || currentDetailPhotos.length <= 1) return;
+            currentDetailPhotoIndex = (currentDetailPhotoIndex + direction + currentDetailPhotos.length) % currentDetailPhotos.length;
+            resetLightboxZoom();
+            updateLightboxContent();
+            setMainGalleryPhotoIndex(currentDetailPhotoIndex);
+        }
+
+        function zoomLightbox(amount) {
+            lightboxZoom = Math.min(Math.max(1.0, lightboxZoom + amount), 4.0);
+            if (lightboxZoom === 1.0) {
+                lightboxPanX = 0;
+                lightboxPanY = 0;
+            }
+            updateLightboxTransform();
+        }
+
+        function resetLightboxZoom() {
+            lightboxZoom = 1.0;
+            lightboxPanX = 0;
+            lightboxPanY = 0;
+            updateLightboxTransform();
+        }
+
+        function updateLightboxTransform() {
+            const img = document.getElementById('lightboxImg');
+            if (img) {
+                img.style.transform = `translate(${lightboxPanX}px, ${lightboxPanY}px) scale(${lightboxZoom})`;
+            }
+        }
+
+        // Eventos de Mouse e Touch para Zoom e Arrasto na Lightbox
+        function initLightboxEvents() {
+            const viewport = document.getElementById('lightboxViewport');
+            if (!viewport) return;
+
+            // Roda do mouse para zoom
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.25 : -0.25;
+                zoomLightbox(delta);
+            }, { passive: false });
+
+            // Clique Duplo para Zoom Alternado
+            viewport.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                if (lightboxZoom > 1.0) {
+                    resetLightboxZoom();
+                } else {
+                    lightboxZoom = 2.5;
+                    updateLightboxTransform();
+                }
+            });
+
+            // Início de Arrasto
+            const handleDragStart = (clientX, clientY) => {
+                if (lightboxZoom > 1.0) {
+                    isDraggingLightbox = true;
+                    dragStartX = clientX - lightboxPanX;
+                    dragStartY = clientY - lightboxPanY;
+                }
+            };
+
+            // Mover
+            const handleDragMove = (clientX, clientY) => {
+                if (isDraggingLightbox && lightboxZoom > 1.0) {
+                    lightboxPanX = clientX - dragStartX;
+                    lightboxPanY = clientY - dragStartY;
+                    updateLightboxTransform();
+                }
+            };
+
+            // Fim do Arrasto
+            const handleDragEnd = () => {
+                isDraggingLightbox = false;
+            };
+
+            // Mouse Events
+            viewport.addEventListener('mousedown', (e) => handleDragStart(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => handleDragMove(e.clientX, e.clientY));
+            window.addEventListener('mouseup', handleDragEnd);
+
+            // Touch Events para Dispositivos Móveis
+            viewport.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            viewport.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1) {
+                    handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', handleDragEnd);
+
+            // Suporte às Teclas de Atalho (Esc para fechar, Setas para navegar)
+            window.addEventListener('keydown', (e) => {
+                const modal = document.getElementById('photoLightboxModal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    if (e.key === 'Escape') closeModal('photoLightboxModal');
+                    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+                    if (e.key === 'ArrowRight') navigateLightbox(1);
+                }
+            });
+        }
+
+        function handleAdminSearch() {
+            const input = document.getElementById('adminSearchInput');
+            adminSearchQuery = input ? input.value.trim() : '';
+            renderAdminSaintsList();
+        }
+
+        function clearAdminSearch() {
+            const input = document.getElementById('adminSearchInput');
+            if (input) input.value = '';
+            adminSearchQuery = '';
+            renderAdminSaintsList();
         }
 
         function renderAdminSaintsList() {
             const listEl = document.getElementById('adminSaintsList');
             if (!listEl) return;
 
-            if (saintsData.length === 0) {
+            const filtered = saintsData.filter(saint => {
+                if (!adminSearchQuery) return true;
+                return saint.name.toLowerCase().includes(adminSearchQuery.toLowerCase());
+            });
+
+            if (filtered.length === 0) {
                 listEl.innerHTML = `
-                    <div class="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs">
-                        Nenhuma história cadastrada no catálogo.
+                    <div class="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs space-y-2">
+                        <p>${adminSearchQuery ? 'Nenhum santo encontrado para a busca realizada.' : 'Nenhuma história cadastrada no catálogo.'}</p>
+                        ${adminSearchQuery ? `<button onclick="clearAdminSearch()" class="px-3 py-1.5 bg-sacred-navy text-sacred-gold text-xs font-cinzel rounded-lg hover:bg-slate-800 transition-colors">Limpar busca</button>` : ''}
                     </div>
                 `;
                 return;
             }
 
-            listEl.innerHTML = saintsData.map(saint => {
+            listEl.innerHTML = filtered.map(saint => {
                 const thumb = (saint.photos && saint.photos[0]) ? saint.photos[0] : '';
                 const feast = saint.feastDay ? `• ${saint.feastDay}` : '';
 
@@ -931,11 +1320,11 @@
                         </div>
 
                         <div class="flex items-center gap-2 shrink-0">
-                            <button onclick="openAdminFormForEdit('${saint.id}')" class="px-3 py-1.5 bg-sacred-navy/10 hover:bg-sacred-navy text-sacred-navy hover:text-white text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center gap-1">
-                                <span>✏️</span> <span class="hidden sm:inline">Editar</span>
+                            <button onclick="openAdminFormForEdit('${saint.id}')" class="px-3 py-1.5 bg-sacred-navy/10 hover:bg-sacred-navy text-sacred-navy hover:text-white text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center">
+                                <span>Editar</span>
                             </button>
-                            <button onclick="promptDeleteSaint('${saint.id}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center gap-1">
-                                <span>🗑️</span> <span class="hidden sm:inline">Excluir</span>
+                            <button onclick="promptDeleteSaint('${saint.id}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-cinzel font-bold rounded-lg transition-colors flex items-center">
+                                <span>Excluir</span>
                             </button>
                         </div>
                     </div>
@@ -1011,12 +1400,12 @@
             if (!canvas) return;
 
             const targetW = 800;
-            const targetH = 450; // Aspect 16:9
+            const targetH = 450;
             canvas.width = targetW;
             canvas.height = targetH;
 
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#0B1325'; // Sacred Navy background
+            ctx.fillStyle = '#0B1325';
             ctx.fillRect(0, 0, targetW, targetH);
 
             const imgW = st.imgObj.width;
@@ -1092,6 +1481,7 @@
         function openAdminFormForCreate() {
             editingSaintId = null;
             document.getElementById('adminFormTitle').innerText = 'Publicar Nova História de Santo';
+            hideFormError();
 
             document.getElementById('postName').value = '';
             document.getElementById('postFeast').value = '';
@@ -1107,18 +1497,19 @@
             resetPhotoSlotState(2);
             resetPhotoSlotState(3);
 
-            document.getElementById('photosRequirementNote').innerText = 'Obrigatório na criação';
+            document.getElementById('photosRequirementNote').innerText = 'Obrigatório selecionar as 3 fotos na criação';
 
             closeModal('adminDashboardModal');
             openModal('adminPostModal');
         }
 
         async function openAdminFormForEdit(id) {
-            const saint = saintsData.find(s => s.id === id);
+            const saint = saintsData.find(s => s.id.toString() === id.toString());
             if (!saint) return;
 
             editingSaintId = id;
             document.getElementById('adminFormTitle').innerText = `Editar: ${saint.name}`;
+            hideFormError();
 
             document.getElementById('postName').value = saint.name || '';
             document.getElementById('postFeast').value = saint.feastDay || '';
@@ -1134,7 +1525,6 @@
             resetPhotoSlotState(2);
             resetPhotoSlotState(3);
 
-            // Carregar fotos existentes nos slots para permitir reajuste
             if (saint.photos) {
                 for (let i = 0; i < 3; i++) {
                     const slotNum = i + 1;
@@ -1164,30 +1554,80 @@
         }
 
         function promptDeleteSaint(id) {
-            const saint = saintsData.find(s => s.id === id);
+            const saint = saintsData.find(s => s.id.toString() === id.toString());
             if (!saint) return;
 
             saintToDeleteId = id;
-            document.getElementById('deleteConfirmText').innerText = `Tem certeza que deseja excluir "${saint.name}" do catálogo? Esta ação não poderá ser desfeita.`;
+            document.getElementById('deleteConfirmText').innerText = `Tem certeza que deseja excluir "${saint.name}" do banco de dados? Esta ação não poderá ser desfeita.`;
             openModal('deleteConfirmModal');
         }
 
-        function confirmDeleteSaintAction() {
+        async function confirmDeleteSaintAction() {
             if (!saintToDeleteId) return;
 
-            saintsData = saintsData.filter(s => s.id !== saintToDeleteId);
-            localStorage.setItem('olhar_sacro_saints', JSON.stringify(saintsData));
+            try {
+                if (!isNaN(saintToDeleteId)) {
+                    await supabaseClient.from('santos').delete().eq('id', Number(saintToDeleteId));
+                }
+            } catch (err) {
+                console.error("Erro ao deletar no banco:", err);
+            }
 
+            saintsData = saintsData.filter(s => s.id.toString() !== saintToDeleteId.toString());
             saintToDeleteId = null;
             closeModal('deleteConfirmModal');
 
             renderSaintsGrid();
+            renderSaintOfDay();
             renderAdminSaintsList();
             initQuoteCarousel();
         }
 
+        async function uploadImageToStorage(dataUrl, fileName) {
+            try {
+                const res = await fetch(dataUrl);
+                const blob = await res.blob();
+                const path = `santos/${Date.now()}_${fileName}.jpg`;
+
+                const { data, error } = await supabaseClient.storage
+                    .from('fotos-santos')
+                    .upload(path, blob, { contentType: 'image/jpeg', upsert: true });
+
+                if (error) {
+                    console.warn("Storage não disponível, salvando DataURL diretamente:", error.message);
+                    return dataUrl;
+                }
+
+                const { data: publicUrlData } = supabaseClient.storage
+                    .from('fotos-santos')
+                    .getPublicUrl(path);
+
+                return publicUrlData.publicUrl;
+            } catch (err) {
+                console.warn("Erro no upload de foto, usando fallback:", err);
+                return dataUrl;
+            }
+        }
+
+        function showFormError(msg) {
+            const el = document.getElementById('formErrorMessage');
+            if (el) {
+                el.innerText = msg;
+                el.classList.remove('hidden');
+            }
+        }
+
+        function hideFormError() {
+            const el = document.getElementById('formErrorMessage');
+            if (el) {
+                el.innerText = '';
+                el.classList.add('hidden');
+            }
+        }
+
         async function handlePostSaint(e) {
             e.preventDefault();
+            hideFormError();
 
             const submitBtn = document.getElementById('submitPostBtn');
             const originalBtnText = submitBtn.innerText;
@@ -1199,56 +1639,113 @@
             const bio = document.getElementById('postBio').value.trim();
 
             try {
-                submitBtn.innerText = 'Salvando Foto & Ajustes...';
-                submitBtn.disabled = true;
+                let existingSaint = editingSaintId ? saintsData.find(s => s.id.toString() === editingSaintId.toString()) : null;
 
-                let existingSaint = editingSaintId ? saintsData.find(s => s.id === editingSaintId) : null;
+                let raw1 = photoSlotsState[1].resultDataUrl || (existingSaint && existingSaint.photos ? existingSaint.photos[0] : '');
+                let raw2 = photoSlotsState[2].resultDataUrl || (existingSaint && existingSaint.photos ? existingSaint.photos[1] : '');
+                let raw3 = photoSlotsState[3].resultDataUrl || (existingSaint && existingSaint.photos ? existingSaint.photos[2] : '');
 
-                const photo1 = photoSlotsState[1].resultDataUrl || (existingSaint ? existingSaint.photos[0] : '');
-                const photo2 = photoSlotsState[2].resultDataUrl || (existingSaint ? existingSaint.photos[1] : '');
-                const photo3 = photoSlotsState[3].resultDataUrl || (existingSaint ? existingSaint.photos[2] : '');
-
-                if (!editingSaintId && (!photo1 || !photo2 || !photo3)) {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
+                if (!editingSaintId && (!raw1 || !raw2 || !raw3)) {
+                    showFormError('Por favor, selecione e ajuste as 3 fotos do santo antes de salvar.');
                     return;
                 }
 
+                submitBtn.innerText = 'Enviando e Salvando...';
+                submitBtn.disabled = true;
+
+                const photo1 = raw1.startsWith('data:') ? await uploadImageToStorage(raw1, 'foto1') : raw1;
+                const photo2 = raw2.startsWith('data:') ? await uploadImageToStorage(raw2, 'foto2') : raw2;
+                const photo3 = raw3.startsWith('data:') ? await uploadImageToStorage(raw3, 'foto3') : raw3;
+
                 const quotesArray = quotesRaw ? quotesRaw.split('\n').map(q => q.trim()).filter(q => q.length > 0) : [];
 
-                if (editingSaintId && existingSaint) {
-                    existingSaint.name = name;
-                    existingSaint.feastDay = feastDay;
-                    existingSaint.patronage = patronage;
-                    existingSaint.quotes = quotesArray;
-                    existingSaint.bio = bio;
-                    existingSaint.photos = [photo1, photo2, photo3];
+                let saintPayload = {
+                    nome: name,
+                    padroado: patronage,
+                    dia_festivo: feastDay,
+                    biografia: bio,
+                    frases: quotesArray,
+                    fotos: [photo1, photo2, photo3]
+                };
+
+                let savedItem = null;
+
+                if (editingSaintId && !isNaN(editingSaintId)) {
+                    let { data: updateData, error: updateErr } = await supabaseClient
+                        .from('santos')
+                        .update(saintPayload)
+                        .eq('id', Number(editingSaintId))
+                        .select();
+
+                    if (updateErr) {
+                        console.error('Erro ao atualizar no Supabase:', updateErr);
+                        showFormError(`Erro ao salvar no banco: ${updateErr.message}`);
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
+                    if (updateData && updateData[0]) savedItem = updateData[0];
                 } else {
-                    const newSaint = {
-                        id: name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-') + '-' + Date.now(),
-                        name: name,
-                        feastDay: feastDay,
-                        patronage: patronage,
-                        quotes: quotesArray,
-                        bio: bio,
-                        photos: [photo1, photo2, photo3]
-                    };
-                    saintsData.unshift(newSaint);
+                    let { data: insertData, error: insertErr } = await supabaseClient
+                        .from('santos')
+                        .insert([saintPayload])
+                        .select();
+
+                    if (insertErr) {
+                        console.error('Erro ao inserir no Supabase:', insertErr);
+                        showFormError(`Erro ao publicar no banco: ${insertErr.message}`);
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
+                    if (insertData && insertData[0]) savedItem = insertData[0];
                 }
 
-                localStorage.setItem('olhar_sacro_saints', JSON.stringify(saintsData));
+                // Atualizar memória local
+                if (savedItem) {
+                    const formatted = {
+                        id: savedItem.id,
+                        name: savedItem.nome || name,
+                        feastDay: savedItem.dia_festivo || feastDay,
+                        patronage: savedItem.padroado || patronage,
+                        bio: savedItem.biografia || bio,
+                        quotes: savedItem.frases || quotesArray,
+                        photos: savedItem.fotos || [photo1, photo2, photo3]
+                    };
 
-                renderSaintsGrid();
+                    if (editingSaintId) {
+                        const idx = saintsData.findIndex(s => s.id.toString() === editingSaintId.toString());
+                        if (idx !== -1) saintsData[idx] = formatted;
+                    } else {
+                        saintsData.push(formatted);
+                    }
+                } else {
+                    // Fallback caso não venha retorno do select
+                    const fallbackObj = {
+                        id: editingSaintId || Date.now(),
+                        name, feastDay, patronage, bio, quotes: quotesArray, photos: [photo1, photo2, photo3]
+                    };
+                    if (editingSaintId) {
+                        const idx = saintsData.findIndex(s => s.id.toString() === editingSaintId.toString());
+                        if (idx !== -1) saintsData[idx] = fallbackObj;
+                    } else {
+                        saintsData.push(fallbackObj);
+                    }
+                }
+
                 closeModal('adminPostModal');
-
                 e.target.reset();
                 editingSaintId = null;
 
+                renderSaintsGrid();
+                renderSaintOfDay();
                 initQuoteCarousel();
+
                 renderAdminSaintsList();
                 openModal('adminDashboardModal');
             } catch (err) {
-                console.error("Erro ao processar o post:", err);
+                console.error("Erro inesperado ao salvar:", err);
+                showFormError("Ocorreu um erro ao tentar salvar. Verifique se o Supabase está ativo.");
             } finally {
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
@@ -1257,8 +1754,7 @@
 
         window.onload = function() {
             initData();
-            renderSaintsGrid();
-            initQuoteCarousel();
+            initLightboxEvents();
         };
     </script>
 </body>
