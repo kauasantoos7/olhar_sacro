@@ -699,6 +699,7 @@
                         id: item.id,
                         name: item.nome || item.name || '',
                         feastDay: item.dia_festivo || item.feastDay || '',
+                        dia_festivo: item.dia_festivo || item.feastDay || '',
                         patronage: item.padroado || item.patronage || '',
                         bio: item.biografia || item.bio || '',
                         quotes: item.frases || item.quotes || [],
@@ -717,51 +718,48 @@
             initQuoteCarousel();
         }
 
+        function getTodayFormattedDate() {
+            const hoje = new Date();
+            const meses = [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ];
+            return `${hoje.getDate()} de ${meses[hoje.getMonth()]}`;
+        }
+
         function isTodayFeast(feastDayStr) {
             if (!feastDayStr) return false;
-
-            const today = new Date();
-            const day = today.getDate();
-            const monthIndex = today.getMonth();
-
-            const months = [
-                'janeiro', 'fevereiro', 'março', 'marco', 'abril', 'maio', 'junho',
-                'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-            ];
-            const currentMonthName = months[monthIndex];
-
-            const strLower = feastDayStr.toLowerCase().trim();
-
-            const dayRegex = new RegExp(`\\b0?${day}\\b`);
-            const monthRegex = new RegExp(`\\b(${currentMonthName}|0?${monthIndex + 1})\\b`);
-
-            return dayRegex.test(strLower) && monthRegex.test(strLower);
+            const dataHoje = getTodayFormattedDate();
+            return feastDayStr.trim().toLowerCase() === dataHoje.trim().toLowerCase();
         }
 
         function renderSaintOfDay() {
-            if (saintsData.length === 0) return;
+            if (!saintsData) return;
 
-            const dateOptions = { day: '2-digit', month: 'long' };
-            const todayFormatted = new Date().toLocaleDateString('pt-BR', dateOptions);
+            const dataHoje = getTodayFormattedDate();
             
-            // Busca AUTOMÁTICA exclusivamente por data festiva do dia de hoje
-            let sods = saintsData.filter(s => isTodayFeast(s.feastDay));
+            // 3. Compara usando a coluna 'dia_festivo' (ignorando maiúsculas e espaços extras)
+            let sods = saintsData.filter(santo => {
+                const diaFestivo = santo.dia_festivo || santo.feastDay;
+                return diaFestivo && diaFestivo.trim().toLowerCase() === dataHoje.trim().toLowerCase();
+            });
 
             const dateLabel = document.getElementById('sodDateLabel');
 
+            // 4. Renderiza na tela
             if (sods.length > 0) {
                 isTodaySaintFound = true;
                 currentSodList = sods;
                 if (dateLabel) {
-                    dateLabel.innerText = `${todayFormatted} • ${sods.length > 1 ? 'Memórias Litúrgicas do Dia' : 'Memória Litúrgica'}`;
+                    dateLabel.innerText = `${dataHoje} • ${sods.length > 1 ? 'Memórias Litúrgicas do Dia' : 'Memória Litúrgica'}`;
                 }
             } else {
-                // Caso não haja nenhum santo celebrado no dia de hoje
                 isTodaySaintFound = false;
                 currentSodList = [];
                 if (dateLabel) {
-                    dateLabel.innerText = `${todayFormatted} • Calendário Litúrgico`;
+                    dateLabel.innerText = `${dataHoje} • Calendário Litúrgico`;
                 }
+                console.log("Nenhum santo encontrado para a data:", dataHoje);
             }
 
             updateSodDisplay();
