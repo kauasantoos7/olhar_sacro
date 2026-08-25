@@ -96,6 +96,13 @@
             </div>
 
             <div class="flex items-center gap-3">
+                <div class="relative inline-block text-left">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-sacred-navyLight border border-sacred-gold/40 text-sacred-goldLight font-cinzel text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-sacred-gold cursor-pointer shadow-sm hover:border-sacred-gold transition-colors">
+                        <option value="pt-BR">🇧🇷 PT</option>
+                        <option value="en">🇺🇸 EN</option>
+                        <option value="es">🇪🇸 ES</option>
+                    </select>
+                </div>
                 <span id="saintCountBadge" class="text-xs font-cinzel text-sacred-gold bg-sacred-navyLight/80 px-3.5 py-1.5 rounded-full border border-sacred-gold/30 shadow-sm backdrop-blur-sm">
                     Carregando...
                 </span>
@@ -165,7 +172,7 @@
 
         <section class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80">
             <div class="relative w-full">
-                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar santo pelo nome ou data festiva (ex: Francisco, 04 de Outubro)..." 
+                <input type="text" id="searchInput" oninput="handleSearch()" data-i18n-placeholder="searchPlaceholder" placeholder="Buscar santo pelo nome ou data festiva (ex: Francisco, 04 de Outubro)..." 
                        class="w-full pl-12 pr-12 py-4 rounded-2xl bg-slate-50/80 border border-slate-200 focus:outline-none focus:border-sacred-gold focus:ring-2 focus:ring-sacred-gold/20 text-sm sm:text-base transition-all shadow-inner">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none">🔍</span>
                 <button onclick="clearSearch()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold p-1.5 rounded-full hover:bg-slate-200/50 transition-colors">
@@ -180,9 +187,9 @@
 
         <div id="emptyState" class="hidden text-center py-16 bg-white/90 rounded-3xl border border-dashed border-slate-300 space-y-3 shadow-sm">
             <div class="text-4xl">📖</div>
-            <h3 class="font-cinzel text-lg font-bold text-sacred-navy">Nenhum santo encontrado</h3>
-            <p class="text-xs text-slate-500 max-w-sm mx-auto">Tente buscar por outro nome de santo ou data celebrativa.</p>
-            <button onclick="clearSearch()" class="mt-2 px-5 py-2.5 bg-sacred-navy text-sacred-gold text-xs font-cinzel font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+            <h3 data-i18n="noSaintFound" class="font-cinzel text-lg font-bold text-sacred-navy">Nenhum santo encontrado</h3>
+            <p data-i18n="noSaintSub" class="text-xs text-slate-500 max-w-sm mx-auto">Tente buscar por outro nome de santo ou data celebrativa.</p>
+            <button onclick="clearSearch()" data-i18n="clearSearch" class="mt-2 px-5 py-2.5 bg-sacred-navy text-sacred-gold text-xs font-cinzel font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
                 Limpar Pesquisa
             </button>
         </div>
@@ -192,7 +199,7 @@
     <footer class="bg-sacred-navy text-slate-400 border-t border-sacred-gold/20 py-8 text-center text-xs space-y-2 relative mt-12">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-sacred-gold/40 to-transparent"></div>
         <p class="font-cinzel text-sacred-goldLight font-medium tracking-wide">OLHAR SACRO</p>
-        <p class="text-slate-500">Desenvolvido por Kauã Rodrigues de Sousa Santos</p>
+        <p data-i18n="developedBy" class="text-slate-500">Desenvolvido por Kauã Rodrigues de Sousa Santos</p>
     </footer>
 
     <div id="saintDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
@@ -212,21 +219,21 @@
 
             <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-grow text-slate-700">
                 <div id="patronageContainer" class="hidden bg-sacred-cream p-4 rounded-2xl border border-sacred-gold/30 shadow-sm">
-                    <span class="text-xs font-cinzel font-bold text-sacred-goldDark uppercase tracking-wider block mb-1">Padroeiro de:</span>
+                    <span data-i18n="patronOfLabel" class="text-xs font-cinzel font-bold text-sacred-goldDark uppercase tracking-wider block mb-1">Padroeiro de:</span>
                     <p id="detailPatronage" class="text-sm font-medium text-sacred-navy"></p>
                 </div>
 
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Galeria de Imagens</span>
-                        <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">🔍 Clique na foto para abrir com zoom</span>
+                        <span data-i18n="galleryLabel" class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Galeria de Imagens</span>
+                        <span data-i18n="zoomHint" class="text-[11px] text-slate-400 font-medium hidden sm:inline">🔍 Clique na foto para abrir com zoom</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div onclick="openCurrentSaintLightbox()" class="sm:col-span-3 aspect-video bg-sacred-navy rounded-2xl overflow-hidden border border-sacred-gold/20 shadow-md relative group cursor-pointer">
                             <img id="galleryMainImg" src="" alt="Imagem Principal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             <div class="absolute inset-0 bg-sacred-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-sacred-goldLight font-cinzel text-xs font-bold backdrop-blur-[2px]">
                                 <span class="bg-sacred-navy/90 px-4 py-2 rounded-xl border border-sacred-gold/40 shadow-lg flex items-center gap-2">
-                                    <span>🔍</span> Ampliar e Ver em Zoom
+                                    <span>🔍</span> <span data-i18n="zoomBtnText">Ampliar e Ver em Zoom</span>
                                 </span>
                             </div>
                         </div>
@@ -235,18 +242,18 @@
                 </div>
 
                 <div class="space-y-2">
-                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">História / Biografia Completa</span>
+                    <span data-i18n="bioLabel" class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">História / Biografia Completa</span>
                     <p id="detailBio" class="text-sm sm:text-base leading-relaxed whitespace-pre-line text-slate-600 bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-inner"></p>
                 </div>
 
                 <div id="quotesContainer" class="hidden space-y-2">
-                    <span class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Frases e Ensinamentos</span>
+                    <span data-i18n="quotesLabel" class="text-xs font-cinzel font-bold text-sacred-navy uppercase tracking-wider block">Frases e Ensinamentos</span>
                     <div id="detailQuotes" class="space-y-2.5 text-sm italic font-cinzel text-sacred-navy bg-sacred-cream p-6 rounded-2xl border border-sacred-gold/30 shadow-sm"></div>
                 </div>
             </div>
 
             <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
-                <button onclick="closeModal('saintDetailModal')" class="px-6 py-2.5 bg-sacred-navy text-sacred-gold font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+                <button onclick="closeModal('saintDetailModal')" data-i18n="closeBtn" class="px-6 py-2.5 bg-sacred-navy text-sacred-gold font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
                     Fechar
                 </button>
             </div>
@@ -614,6 +621,201 @@
     </div>
 
     <script>
+        const I18N_DICTIONARY = {
+            'pt-BR': {
+                subTitle: 'HISTÓRIAS DOS SANTOS',
+                sodTitle: 'Santo do Dia',
+                sodPrayForUs: 'Rogai por nós!',
+                sodReadStory: '✝ Conhecer História Completa',
+                sodNoSaintTitle: 'Nenhum Santo Celebrado Nesta Data',
+                sodExploreCatalog: 'Explorar Catálogo Completo',
+                searchPlaceholder: 'Buscar santo pelo nome ou data festiva (ex: Francisco, 04 de Outubro)...',
+                noSaintFound: 'Nenhum santo encontrado',
+                noSaintSub: 'Tente buscar por outro nome de santo ou data celebrativa.',
+                clearSearch: 'Limpar Pesquisa',
+                developedBy: 'Desenvolvido por Kauã Rodrigues de Sousa Santos',
+                viewStoryBtn: '† Ver História',
+                readFullBioBtn: 'Ler biografia completa',
+                patronOfLabel: 'Padroeiro de:',
+                galleryLabel: 'Galeria de Imagens',
+                zoomHint: '🔍 Clique na foto para abrir com zoom',
+                zoomBtnText: 'Ampliar e Ver em Zoom',
+                bioLabel: 'História / Biografia Completa',
+                quotesLabel: 'Frases e Ensinamentos',
+                closeBtn: 'Fechar',
+                loading: 'Carregando...',
+                saintsCountSingle: 'Santo',
+                saintsCountPlural: 'Santos',
+                liturgicalMem: 'Memória Litúrgica',
+                liturgicalMems: 'Memórias Litúrgicas do Dia',
+                liturgicalCal: 'Calendário Litúrgico',
+                photoWord: 'Foto',
+                photoOfWord: 'de'
+            },
+            'en': {
+                subTitle: 'STORIES OF SAINTS',
+                sodTitle: 'Saint of the Day',
+                sodPrayForUs: 'Pray for us!',
+                sodReadStory: '✝ Read Full Story',
+                sodNoSaintTitle: 'No Saint Celebrated on This Date',
+                sodExploreCatalog: 'Explore Full Catalog',
+                searchPlaceholder: 'Search saint by name or feast day (e.g. Francis, October 4th)...',
+                noSaintFound: 'No saints found',
+                noSaintSub: 'Try searching for another saint name or feast date.',
+                clearSearch: 'Clear Search',
+                developedBy: 'Developed by Kauã Rodrigues de Sousa Santos',
+                viewStoryBtn: '† View Story',
+                readFullBioBtn: 'Read full biography',
+                patronOfLabel: 'Patron of:',
+                galleryLabel: 'Image Gallery',
+                zoomHint: '🔍 Click photo to open with zoom',
+                zoomBtnText: 'Enlarge and Zoom',
+                bioLabel: 'Full Story / Biography',
+                quotesLabel: 'Quotes & Teachings',
+                closeBtn: 'Close',
+                loading: 'Loading...',
+                saintsCountSingle: 'Saint',
+                saintsCountPlural: 'Saints',
+                liturgicalMem: 'Liturgical Memorial',
+                liturgicalMems: 'Liturgical Memorials of the Day',
+                liturgicalCal: 'Liturgical Calendar',
+                photoWord: 'Photo',
+                photoOfWord: 'of'
+            },
+            'es': {
+                subTitle: 'HISTORIAS DE SANTOS',
+                sodTitle: 'Santo del Día',
+                sodPrayForUs: '¡Ruega por nosotros!',
+                sodReadStory: '✝ Conocer Historia Completa',
+                sodNoSaintTitle: 'Ningún Santo Celebrado en Esta Fecha',
+                sodExploreCatalog: 'Explorar Catálogo Completo',
+                searchPlaceholder: 'Buscar santo por nombre o fecha festiva (ej: Francisco, 04 de Octubre)...',
+                noSaintFound: 'Ningún santo encontrado',
+                noSaintSub: 'Intente buscar otro nombre de santo o fecha festiva.',
+                clearSearch: 'Limpiar Búsqueda',
+                developedBy: 'Desarrollado por Kauã Rodrigues de Sousa Santos',
+                viewStoryBtn: '† Ver Historia',
+                readFullBioBtn: 'Leer biografía completa',
+                patronOfLabel: 'Patrón de:',
+                galleryLabel: 'Galería de Imágenes',
+                zoomHint: '🔍 Haga clic en la foto para ampliar',
+                zoomBtnText: 'Ampliar y Ver en Zoom',
+                bioLabel: 'Historia / Biografía Completa',
+                quotesLabel: 'Frases y Enseñanzas',
+                closeBtn: 'Cerrar',
+                loading: 'Cargando...',
+                saintsCountSingle: 'Santo',
+                saintsCountPlural: 'Santos',
+                liturgicalMem: 'Memoria Litúrgica',
+                liturgicalMems: 'Memorias Litúrgicas del Día',
+                liturgicalCal: 'Calendario Litúrgico',
+                photoWord: 'Foto',
+                photoOfWord: 'de'
+            }
+        };
+
+        let currentLang = localStorage.getItem('olhar_sacro_lang') || 'pt-BR';
+
+        // Traduções dos dados padrão de exemplo para EN e ES
+        const TRANSLATED_SAINTS = {
+            'en': {
+                1: {
+                    name: 'Saint Francis of Assisi',
+                    feastDay: 'October 4th',
+                    patronage: 'Animals, Ecology and Italy',
+                    bio: 'Saint Francis of Assisi (1181-1226) was born in Assisi, Italy. Son of a wealthy cloth merchant, he renounced all material inheritance before the local bishop to embrace Lady Poverty and radically follow Jesus Christ.\n\nHe received the stigmata of the Passion on his body and composed the famous \'Canticle of the Sun\'. He is one of the most revered saints in Christian history for his simplicity, love for the poor, and care for creation.',
+                    quotes: [
+                        'Start by doing what is necessary, then what is possible, and suddenly you are doing the impossible.',
+                        'Lord, make me an instrument of your peace.',
+                        'No one is so perfect that they cannot learn from others.'
+                    ]
+                },
+                2: {
+                    name: 'Saint Thérèse of the Child Jesus',
+                    feastDay: 'October 1st',
+                    patronage: 'Missions and Florists',
+                    bio: 'Saint Thérèse of Lisieux (1873-1897), known as the \'Little Flower of Jesus\', entered the Carmel of Lisieux at just 15 years of age.\n\nDespite her short and cloistered life, she became Patroness of Missions through her ardent prayers and offerings. Her autobiography \'Story of a Soul\' inspires millions through the spirituality of the \'Little Way\': doing small everyday tasks with extraordinary love.',
+                    quotes: [
+                        'I want to spend my heaven doing good upon earth.',
+                        'I understood that love contained all vocations, that love was everything.',
+                        'For me, prayer is a surge of the heart; it is a simple glance turned toward heaven.'
+                    ]
+                }
+            },
+            'es': {
+                1: {
+                    name: 'San Francisco de Asís',
+                    feastDay: '04 de Octubre',
+                    patronage: 'Animales, Ecología e Italia',
+                    bio: 'San Francisco de Asís (1181-1226) nació en Asís, Italia. Hijo de un rico comerciante de telas, renunció a toda su herencia material ante el obispo para abrazar a la Señora Pobreza y seguir radicalmente los pasos de Jesucristo.\n\nRecibió los estigmas de la Pasión en su cuerpo y compuso el famoso \'Cántico de las Criaturas\'. Es uno de los santos más venerados por su sencillez, amor a los pobres y protección de la naturaleza.',
+                    quotes: [
+                        'Empieza haciendo lo necesario, después lo posible, y de repente estarás haciendo lo imposible.',
+                        'Señor, hazme un instrumento de tu paz.',
+                        'Nadie es tan perfecto que no pueda aprender de los demás.'
+                    ]
+                },
+                2: {
+                    name: 'Santa Teresita del Niño Jesús',
+                    feastDay: '01 de Octubre',
+                    patronage: 'Misiones y Floristas',
+                    bio: 'Santa Teresa de Lisieux (1873-1897), conocida como la \'Florcita de Jesús\', ingresó al Carmelo de Lisieux con solo 15 años.\n\nA pesar de su breve vida de clausura, se convirtió en Patrona de las Misiones por sus ardientes oraciones. Su autobiografía \'Historia de una Alma\' inspira a millones con la teología del \'Caminito\': hacer las pequeñas cosas cotidianas con un amor extraordinario.',
+                    quotes: [
+                        'Quiero pasar mi cielo haciendo el bien sobre la tierra.',
+                        'Comprendí que el amor encerraba todas las vocaciones, que el amor lo era todo.',
+                        'Para mí, la oración es un impulso del corazón, una simple mirada dirigida al cielo.'
+                    ]
+                }
+            }
+        };
+
+        function getLocalizedSaint(saint) {
+            if (currentLang === 'pt-BR' || !TRANSLATED_SAINTS[currentLang] || !TRANSLATED_SAINTS[currentLang][saint.id]) {
+                return saint;
+            }
+            const tr = TRANSLATED_SAINTS[currentLang][saint.id];
+            return {
+                ...saint,
+                name: tr.name || saint.name,
+                feastDay: tr.feastDay || saint.feastDay,
+                patronage: tr.patronage || saint.patronage,
+                bio: tr.bio || saint.bio,
+                quotes: tr.quotes || saint.quotes
+            };
+        }
+
+        function t(key) {
+            const dict = I18N_DICTIONARY[currentLang] || I18N_DICTIONARY['pt-BR'];
+            return dict[key] || I18N_DICTIONARY['pt-BR'][key] || key;
+        }
+
+        function changeLanguage(lang) {
+            if (!I18N_DICTIONARY[lang]) return;
+            currentLang = lang;
+            localStorage.setItem('olhar_sacro_lang', lang);
+            
+            const selectEl = document.getElementById('langSelect');
+            if (selectEl) selectEl.value = lang;
+
+            updateStaticTranslations();
+            renderSaintsGrid();
+            renderSaintOfDay();
+            initQuoteCarousel();
+        }
+
+        function updateStaticTranslations() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key) el.innerText = t(key);
+            });
+
+            const inputs = document.querySelectorAll('[data-i18n-placeholder]');
+            inputs.forEach(input => {
+                const key = input.getAttribute('data-i18n-placeholder');
+                if (key) input.placeholder = t(key);
+            });
+        }
+
         // Configuração Supabase
         const SUPABASE_URL = 'https://tuwcqdygnmckxacnhpmp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_CzzocUO-w183rgHooHIGLg_S9iB4tH0';
@@ -789,13 +991,13 @@
                 isTodaySaintFound = true;
                 currentSodList = sods;
                 if (dateLabel) {
-                    dateLabel.innerText = `${dataHoje} • ${sods.length > 1 ? 'Memórias Litúrgicas do Dia' : 'Memória Litúrgica'}`;
+                    dateLabel.innerText = `${dataHoje} • ${sods.length > 1 ? t('liturgicalMems') : t('liturgicalMem')}`;
                 }
             } else {
                 isTodaySaintFound = false;
                 currentSodList = [];
                 if (dateLabel) {
-                    dateLabel.innerText = `${dataHoje} • Calendário Litúrgico`;
+                    dateLabel.innerText = `${dataHoje} • ${t('liturgicalCal')}`;
                 }
             }
 
@@ -824,7 +1026,8 @@
                 sodGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8";
             }
 
-            sodGrid.innerHTML = currentSodList.map(sod => {
+            sodGrid.innerHTML = currentSodList.map(rawSaint => {
+                const sod = getLocalizedSaint(rawSaint);
                 const coverPhoto = (sod.photos && sod.photos[0]) ? escapeHtml(sod.photos[0]) : '';
                 const isSingle = currentSodList.length === 1;
                 const safeName = escapeHtml(sod.name);
@@ -838,7 +1041,7 @@
                                 <img src="${coverPhoto}" alt="${safeName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <div class="absolute inset-0 bg-gradient-to-t from-sacred-navy/80 via-transparent to-transparent"></div>
                                 <span class="absolute top-3 left-3 bg-sacred-gold text-sacred-navy font-cinzel text-[10px] sm:text-xs font-black tracking-widest px-3 py-1 rounded-full uppercase shadow-md flex items-center gap-1.5">
-                                    <span>✝</span> Santo do Dia
+                                    <span>✝</span> ${t('sodTitle')}
                                 </span>
                             </div>
 
@@ -848,13 +1051,13 @@
                                         ${safeName}
                                     </h2>
                                     <p class="text-sm sm:text-base italic font-cinzel text-sacred-goldDark font-semibold bg-sacred-cream/80 p-3.5 rounded-2xl border border-sacred-gold/30 shadow-sm">
-                                        “${safeName}, Rogai por nós!”
+                                        “${safeName}, ${t('sodPrayForUs')}”
                                     </p>
                                 </div>
 
                                 <div class="pt-2">
                                     <button onclick="openSaintDetailModal('${safeId}')" class="px-5 py-2.5 bg-sacred-navy text-sacred-goldLight font-cinzel text-xs font-bold rounded-xl hover:bg-slate-800 transition-all duration-300 shadow-md border border-sacred-gold/30 hover:shadow-gold-glow flex items-center gap-2">
-                                        <span>✝ Conhecer História Completa</span>
+                                        <span>${t('sodReadStory')}</span>
                                         <span>→</span>
                                     </button>
                                 </div>
@@ -868,7 +1071,8 @@
         function refreshQuotesList() {
             activeQuotesList = [];
             if (Array.isArray(saintsData)) {
-                saintsData.forEach(saint => {
+                saintsData.forEach(rawSaint => {
+                    const saint = getLocalizedSaint(rawSaint);
                     if (saint.quotes && Array.isArray(saint.quotes)) {
                         saint.quotes.forEach(q => {
                             if (q && q.trim()) {
@@ -979,7 +1183,8 @@
 
             if (!grid) return;
 
-            const filtered = saintsData.filter(saint => {
+            const filtered = saintsData.filter(rawSaint => {
+                const saint = getLocalizedSaint(rawSaint);
                 if (!currentSearchQuery) return true;
                 const q = currentSearchQuery.toLowerCase().trim();
                 const nameMatch = saint.name ? saint.name.toLowerCase().includes(q) : false;
@@ -988,7 +1193,7 @@
             });
 
             if (countBadge) {
-                countBadge.innerText = `${filtered.length} ${filtered.length === 1 ? 'Santo' : 'Santos'}`;
+                countBadge.innerText = `${filtered.length} ${filtered.length === 1 ? t('saintsCountSingle') : t('saintsCountPlural')}`;
             }
 
             if (filtered.length === 0) {
@@ -999,7 +1204,8 @@
 
             if (emptyState) emptyState.classList.add('hidden');
 
-            grid.innerHTML = filtered.map(saint => {
+            grid.innerHTML = filtered.map(rawSaint => {
+                const saint = getLocalizedSaint(rawSaint);
                 const coverPhoto = (saint.photos && saint.photos[0]) ? escapeHtml(saint.photos[0]) : '';
                 const feastText = saint.feastDay ? `• ${escapeHtml(saint.feastDay)}` : '';
                 const safeName = escapeHtml(saint.name);
@@ -1016,7 +1222,7 @@
                                 <img src="${coverPhoto}" alt="${safeName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <div class="absolute inset-0 bg-gradient-to-t from-sacred-navy via-transparent to-transparent opacity-80"></div>
                                 <span class="absolute bottom-3 left-3 text-xs font-cinzel text-sacred-goldLight bg-sacred-navy/85 px-3 py-1 rounded-full border border-sacred-gold/30 backdrop-blur-md shadow-sm">
-                                    † Ver História
+                                    ${t('viewStoryBtn')}
                                 </span>
                             </div>
                             <div class="p-5 sm:p-6">
@@ -1032,7 +1238,7 @@
                             </div>
                         </div>
                         <div class="px-5 sm:px-6 pb-5 pt-3 text-xs font-cinzel font-bold text-sacred-navy flex items-center justify-between border-t border-slate-100">
-                            <span>Ler biografia completa</span>
+                            <span>${t('readFullBioBtn')}</span>
                             <span class="text-sacred-gold text-base group-hover:translate-x-1.5 transition-transform">→</span>
                         </div>
                     </div>
@@ -1192,8 +1398,9 @@
         }
 
         function openSaintDetailModal(id) {
-            const saint = saintsData.find(s => s.id.toString() === id.toString());
-            if (!saint) return;
+            const rawSaint = saintsData.find(s => s.id.toString() === id.toString());
+            if (!rawSaint) return;
+            const saint = getLocalizedSaint(rawSaint);
 
             document.getElementById('detailTitle').innerText = saint.name;
             document.getElementById('detailFeast').innerText = saint.feastDay ? `Festa: ${saint.feastDay}` : '';
@@ -1283,7 +1490,7 @@
 
             if (currentDetailPhotos.length > 0) {
                 img.src = currentDetailPhotos[currentDetailPhotoIndex];
-                counter.innerText = `Foto ${currentDetailPhotoIndex + 1} de ${currentDetailPhotos.length}`;
+                counter.innerText = `${t('photoWord')} ${currentDetailPhotoIndex + 1} ${t('photoOfWord')} ${currentDetailPhotos.length}`;
             }
 
             if (currentDetailPhotos.length > 1) {
@@ -1883,6 +2090,10 @@
         }
 
         window.onload = function() {
+            const selectEl = document.getElementById('langSelect');
+            if (selectEl) selectEl.value = currentLang;
+            updateStaticTranslations();
+
             initData();
             initLightboxEvents();
             verificarSessaoAdmin();
