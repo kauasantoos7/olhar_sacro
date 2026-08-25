@@ -681,6 +681,15 @@
             3: { imgObj: null, fitMode: 'cover', zoom: 1.0, posX: 50, posY: 50, resultDataUrl: null }
         };
 
+        // Função para embaralhar um array de forma aleatória (Algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         async function initData() {
             const badge = document.getElementById('saintCountBadge');
             if (badge) badge.innerText = 'Carregando...';
@@ -712,6 +721,9 @@
                 console.error('Erro na requisição ao Supabase:', err);
                 if (saintsData.length === 0) saintsData = INITIAL_SAINTS;
             }
+
+            // Embaralha aleatoriamente a ordem dos santos toda vez que a página carrega ou é atualizada
+            shuffleArray(saintsData);
 
             renderSaintsGrid();
             renderSaintOfDay();
